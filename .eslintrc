@@ -1,0 +1,9 @@
+{
+    "extends": [
+        "react-app",
+        "react-app/jest",
+        "@feature-sliced/eslint-config/rules/import-order",
+        "@feature-sliced/eslint-config/rules/public-api",
+        "@feature-sliced/eslint-config/rules/layers-slices"
+    ]
+}
