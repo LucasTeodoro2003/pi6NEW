@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-// import { useAuth } from "../../../App/authPages"; 
+import { useAuth } from "../../../App/authPages"; 
 import { api } from "../../../App/serviceApi";
 import { Person } from "../../../Entities/employee";
 import { User } from "../../../Entities/users";
@@ -8,7 +8,7 @@ import { AlertSimple } from "../../../shared/ui";
 import { BackgroundHome } from "../../../widgets/backGround";
 import { Header } from "../../../widgets/header";
 import { Sidebar } from "../../../widgets/SideBar";
-// import { NotFoundPage } from "../../notFound";
+import { NotFoundPage } from "../../notFound";
 
 function HomePage() {
   const [videosId, setVideosId] = useState("");
@@ -20,7 +20,7 @@ function HomePage() {
   ]);
   const [people, setPeople] = useState<Person[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  // const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   const getCachedData = (key: string) => {
     const cachedData = localStorage.getItem(key);
@@ -104,9 +104,9 @@ function HomePage() {
     setShow(true);
   };
 
-  // if (!isLoggedIn) {
-  //   return <NotFoundPage />;
-  // }
+  if (!isLoggedIn) {
+    return <NotFoundPage />;
+  }
 
   return (
     <main>

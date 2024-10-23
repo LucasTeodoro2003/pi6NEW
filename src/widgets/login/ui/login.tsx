@@ -15,13 +15,13 @@ function Login() {
 
     try {
       const response = await api.post('/api/Auth', { email, password });
-      const { token } = response.data;
+      const token = response.data;
 
       localStorage.setItem('token', token);
-
+      
       navigate('/home');
     } catch (err) {
-      setError('Email ou senha incorretos!');
+      setError('Email ou senha incorretos!' + err);
     }
   };
 

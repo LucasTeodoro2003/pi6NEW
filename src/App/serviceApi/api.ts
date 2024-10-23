@@ -46,7 +46,6 @@ import axios from "axios";
 // SO FUNCIONAR
 const api = axios.create({
   baseURL: "https://api-pi6periodo.azurewebsites.net",
-  timeout: 1000,
 });
 
 //Tokens
