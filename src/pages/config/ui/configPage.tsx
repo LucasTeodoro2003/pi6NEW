@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { apiUser } from "../../../App/serviceApi";
+import { api } from "../../../App/serviceApi";
 import { User } from "../../../Entities/users";
 import { BackgroundConfig } from "../../../widgets/backGround";
 import { Header } from "../../../widgets/header";
@@ -27,7 +27,7 @@ function ConfigPage() {
     if (cachedUser) {
       setUser(cachedUser);
     } else {
-      apiUser.get("/User/GetUser")
+      api.get("/PersonController/GetPersons")
         .then((response) => {
           const fetchedUser = response.data[0] || null;
           setUser(fetchedUser);

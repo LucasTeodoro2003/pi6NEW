@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 // import { useAuth } from "../../../App/authPages"; 
-import { api, apiTabs, apiUser } from "../../../App/serviceApi";
+import { api } from "../../../App/serviceApi";
 import { Person } from "../../../Entities/employee";
 import { User } from "../../../Entities/users";
 import { AlertSimple } from "../../../shared/ui";
@@ -52,7 +52,7 @@ function HomePage() {
     if (cachedUser) {
       setUser(cachedUser);
     } else {
-      apiUser.get("/User/GetUser")
+      api.get("/PersonController/GetPerson")
         .then((response) => {
           const fetchedUser = response.data[0] || null;
           setUser(fetchedUser);
@@ -69,7 +69,7 @@ function HomePage() {
     if (cachedTabs) {
       setTabs(cachedTabs);
     } else {
-      apiTabs.get("/Cam/GetCam")
+      api.get("/Cam/GetCam")
         .then((response) => {
           const fetchedTabs = response.data.map((tab: { name: string; href: string }, index: number) => ({
             name: tab.name,

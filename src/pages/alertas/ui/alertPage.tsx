@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { api, apiUser } from "../../../App/serviceApi";
+import { api } from "../../../App/serviceApi";
 import { Person } from "../../../Entities/employee";
 import { User } from "../../../Entities/users";
 import { BackgroundAlert } from "../../../widgets/backGround";
@@ -45,7 +45,7 @@ function AlertPage() {
     if (cachedUser) {
       setUser(cachedUser);
     } else {
-      apiUser.get("/User/GetUser")
+      api.get("/PersonController/GetPersons")
         .then((response) => {
           const fetchedUser = response.data[0] || null;
           setUser(fetchedUser);

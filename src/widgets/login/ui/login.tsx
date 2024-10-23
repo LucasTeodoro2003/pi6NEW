@@ -1,7 +1,7 @@
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router";
-import { apiUser } from "../../../App/serviceApi";
+import { api } from "../../../App/serviceApi";
 
 function Login() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function Login() {
     setError(null);
 
     try {
-      const response = await apiUser.post('/login', { email, password });
+      const response = await api.post('/api/Auth', { email, password });
       const { token } = response.data;
 
       localStorage.setItem('token', token);
