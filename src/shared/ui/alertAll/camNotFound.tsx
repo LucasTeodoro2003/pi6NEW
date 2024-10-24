@@ -36,7 +36,7 @@ const CamNotFound: React.FC<CamNotFoundPromps> = ({ show, setShowAlert }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="mr-28 pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white dark:bg-gray-700 shadow-lg dark:ring-1 dark:ring-black dark:ring-opacity-5">
+            <div className="mt-7 mr-28 pointer-events-auto w-40 max-w-sm overflow-hidden rounded-lg bg-white dark:bg-gray-700 shadow-lg dark:ring-1 dark:ring-black dark:ring-opacity-5">
               <div className="p-4">
                 <div className="flex items-center">
                   <div className="flex w-0 flex-1 justify-between">

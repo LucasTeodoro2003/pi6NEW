@@ -8,6 +8,8 @@ interface EmployeeRowProps {
 export function EmployeeRow({ person }: EmployeeRowProps) {
   const navigate = useNavigate();
 
+  console.log("Exibindo linha do funcionário:", person.id); // Adicionado console.log
+
   return (
     <tr key={person.id}>
       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">

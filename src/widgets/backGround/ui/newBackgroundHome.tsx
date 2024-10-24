@@ -1,18 +1,22 @@
 import React from "react";
-import { Person } from "../../../Entities/employee";
+import { Address } from "../../../Entities/address";
+import { User } from "../../../Entities/users";
+import { TableLocation } from "../../tablesLocation";
 interface NewBackgroundHomeProps {
-  people: Person[];
+  address: Address[];
+  user: User | null;
 }
 
 const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
-  people,
+  address,
+  user
 }) => {
   return (
     <div className="flex h-screen ml-64">
       <div className="bg-white dark:bg-gray-800 w-full h-full">
         <div className="flex mt-5 mx-5 bg-white dark:bg-gray-800">
           <div className="flex text-justify w-full">
-          Lucas
+            <TableLocation address={address} user={user} />
           </div>
         </div>
       </div>
