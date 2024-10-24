@@ -1,5 +1,6 @@
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { FormEvent, useState } from "react";
+import { Hourglass } from "react-loader-spinner";
 import { useNavigate } from "react-router";
 import { api } from "../../../App/serviceApi";
 
@@ -29,7 +30,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-800 to-primary">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-800 to-primary">
       <div className="bg-gray-900 p-8 rounded-lg shadow-2xl shadow-gray-950 max-w-sm w-full">
         <h2 className="text-center text-white text-2xl font-bold mb-6">
           SEJA BEM VINDO!
@@ -87,10 +88,21 @@ function Login() {
             type="submit"
             className="mt-14 w-full py-3 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors"
           >
-            {loading ? <></> : "LOGIN"}
+            LOGIN
           </button>
         </form>
       </div>
+      {loading && <>
+        <div className="mt-4 flex justify-center w-full">
+        <Hourglass visible={true}
+          height="50"
+          width="50"
+          ariaLabel="hourglass-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          colors={['#050b14', '#72a1ed']} />
+      </div>
+      </>}
     </div>
   );
 }
