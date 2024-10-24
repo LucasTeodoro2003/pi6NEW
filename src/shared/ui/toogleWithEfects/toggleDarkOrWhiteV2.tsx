@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-
-
-
-
-
-
 function ToggleDarkorWhiteV2(){
   const [isDark, setIsDark] = useState(false);
 
