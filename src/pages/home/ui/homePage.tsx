@@ -20,55 +20,30 @@ function HomePage() {
   ]);
   const [people, setPeople] = useState<Person[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  const { isLoggedIn } = useAuth();
-
-  const getCachedData = (key: string) => {
-    const cachedData = localStorage.getItem(key);
-    return cachedData ? JSON.parse(cachedData) : null;
-  };
-  
-  const setCachedData = (key: string, data: any) => {
-    localStorage.setItem(key, JSON.stringify(data));
-  };
+  const { isLoggedIn, email } = useAuth();
 
   useEffect(() => {
-    const cachedPeople = getCachedData('people');
-    if (cachedPeople) {
-      setPeople(cachedPeople);
-    } else {
-      api.get("/PersonController/GetPersons")
+      api.get("/PersonController/GetPerson?email=" + email)
         .then((response) => {
-          setPeople(response.data);
-          setCachedData('people', response.data);
-        })
-        .catch((err) => {
-          console.error("Aconteceu um erro: " + err);
-        });
-    }
-  }, []);
-
-  useEffect(() => {
-    const cachedUser = getCachedData('user');
-    if (cachedUser) {
-      setUser(cachedUser);
-    } else {
-      api.get("/PersonController/GetPerson")
-        .then((response) => {
-          const fetchedUser = response.data[0] || null;
+          const fetchedUser = response.data.return;
           setUser(fetchedUser);
-          setCachedData('user', fetchedUser);
         })
         .catch((err) => {
           console.error("Aconteceu um erro: " + err);
         });
-    }
-  }, []);
+  }, [email]);
 
   useEffect(() => {
-    const cachedTabs = getCachedData('tabs');
-    if (cachedTabs) {
-      setTabs(cachedTabs);
-    } else {
+    api.get("/PersonController/GetAllPerson")
+      .then((response) => {
+        setPeople(response.data.return);
+      })
+      .catch((err) => {
+        console.error("Aconteceu um erro: " + err);
+      });
+}, []);
+
+  useEffect(() => {
       api.get("/Cam/GetCam")
         .then((response) => {
           const fetchedTabs = response.data.map((tab: { name: string; href: string }, index: number) => ({
@@ -77,12 +52,10 @@ function HomePage() {
             current: activeTab === index,
           }));
           setTabs(fetchedTabs);
-          setCachedData('tabs', fetchedTabs);
         })
         .catch((err) => {
           console.error("Aconteceu um erro: " + err);
         });
-    }
   }, [activeTab]);
 
   useEffect(() => {

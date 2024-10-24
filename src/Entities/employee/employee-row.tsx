@@ -13,7 +13,14 @@ export function EmployeeRow({ person }: EmployeeRowProps) {
       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
         <div className="flex items-center">
           <div className="h-10 w-10 flex-shrink-0">
-            <img className="h-10 w-10 rounded-full" src={person.image} alt="" />
+            <img
+              className={
+                "h-10 w-10 rounded-full " +
+                (person.image ? "dark:filter dark:invert" : "")
+              }
+              src={person.image ? person.image : "usuario.png"}
+              alt=""
+            />
           </div>
           <div className="ml-1">
             <div className="font-medium text-gray-900 dark:text-white">
