@@ -16,7 +16,6 @@ interface AddressNew extends Address {
   state: string;
   lat: number;
   lng: number;
-  name: string;
 }
 
 const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
@@ -36,6 +35,7 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
         address.map(async (addr) => {
           try {
             const resp = await cep.findCEP(addr.cep);
+            console.log(resp)
             return {
               ...addr,
               address_name: resp.address_name,
@@ -45,7 +45,6 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
               state: resp.state,
               lat: Number(resp.lat),
               lng: Number(resp.lng),
-              name: resp.name,
             };
           } catch (error) {
             console.error("Erro ao buscar CEP:", error);
@@ -58,6 +57,8 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
 
     fetchAddressDetails();
   }, [address, cep]);
+
+  console.log(newAddress)
 
   return (
     <ul className="ml-4 mt-4 mr-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -72,8 +73,11 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
             className="col-span-1 h-fit divide-y divide-gray-200 rounded-lg bg-white dark:bg-gray-700 shadow"
           >
             <div className="flex w-full items-center justify-between space-x-6 p-6">
-              <div className="flex-1 truncate">
-                <div className="flex items-center space-x-3">
+              <div className="flex-2 truncate">
+                {isValidLatLng ? (
+                  <h3 className=" flex items-center justify-center dark:text-white">{addr.name}</h3>
+                ) : (<></>)}
+                <div className="flex items-center space-x-3 mt-2">
                   <h3 className="truncate text-sm font-medium text-gray-900 dark:text-white">
                     {isValidLatLng ? (
                       <GoogleMaps lat={addr.lat} lng={addr.lng} isDarkMode={isDark} />
@@ -86,12 +90,9 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
             </div>
             <div>
               <div className="overflow-hidden transition-all duration-200 ease-in-out max-h-96">
-                <div className="p-4">
-                  <ul>
-                    {user?.name}
-                    {addr?.cep}
-                  </ul>
-                  <ul>{user?.email}</ul>
+                <div className="p-4 justify-between flex-2 dark:text-white">
+                  <ul className="flex justify-between"><td>Endereço: </td><td>{addr.address_name}</td></ul>
+                  <ul className="flex justify-between"><td>Encarregado: </td><td>{user?.name}</td></ul>
                 </div>
               </div>
             </div>

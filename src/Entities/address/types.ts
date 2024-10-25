@@ -1,5 +1,6 @@
 export interface Address {
   id: string,
+  name: string;
   cep: string;
   address_type: string,
   address_name: string,
@@ -8,5 +9,4 @@ export interface Address {
   city: string,
   lat: number,
   lng: number,
-  name: string,
 }

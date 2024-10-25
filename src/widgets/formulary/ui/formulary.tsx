@@ -1,17 +1,32 @@
-/*
-  Este exemplo requer algumas alterações na sua configuração:
-
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-*/
+import { FormEvent, useState } from "react";
+import { Hourglass } from "react-loader-spinner";
+import { useNavigate } from "react-router";
+import { api } from "../../../App/serviceApi";
 
 function Formulary() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("")
+  const [name, setName] = useState("")
+  const [phone, setPhone] = useState("")
+  const [password, setPassword] = useState("")
+
+  const verifyButton = async (e: FormEvent<HTMLFormElement>) => {
+    setLoading(true);
+    e.preventDefault();
+
+    try {
+      const response = await api.post("/PersonController/CreatePerson", { email, password, name, phone });
+      console.log(response.data)
+
+
+      window.location.reload()
+    } catch (err) {
+      console.log("ALgum item faltando!" +err);
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       <div>
@@ -28,10 +43,10 @@ function Formulary() {
           </div>
 
           <div className="mt-5 md:col-span-2 md:mt-0">
-            <form action="#" method="POST">
+            <form onSubmit={verifyButton}>
               <div className="shadow sm:overflow-hidden sm:rounded-md ">
                 <div className="space-y-6 bg-gray-100 dark:bg-gray-700 px-4 py-5 sm:p-6">
-                  <div className="">
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-white">
                       Perfil
                     </label>
@@ -97,7 +112,6 @@ function Formulary() {
                       name="obs"
                       rows={3}
                       className="bg-gray-100 dark:text-white dark:bg-gray-700 mt-1 block w-full rounded-md border-gray-300 border-2 dark:border-gray-400 shadow-sm dark:shadow-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      defaultValue={""}
                     />
                   </div>
                 </div>
@@ -128,18 +142,16 @@ function Formulary() {
           </div>
 
           <div className="mb-6 md:col-span-2 md:mt-0">
-            <form action="#" method="POST">
+            <form onSubmit={verifyButton}>
               <div className="overflow-hidden shadow sm:rounded-md">
                 <div className="bg-gray-100 dark:bg-gray-700 px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-6 gap-6">
-
-
                     <div className="col-span-6 sm:col-span-3">
                       <label
                         htmlFor="name"
                         className="block text-sm font-medium text-gray-700 dark:text-white"
                       >
-                        Nome Completo
+                        Nome
                       </label>
                       <input
                         type="text"
@@ -147,6 +159,11 @@ function Formulary() {
                         id="name"
                         autoComplete="given-name"
                         className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 dark:shadow-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setName(value);
+                          setPassword(value);
+                        }}
                       />
                     </div>
 
@@ -163,21 +180,22 @@ function Formulary() {
                         id="email"
                         autoComplete="email"
                         className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 shadow-sm dark:shadow-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
-                      />
+                        onChange={(e) => setEmail(e.target.value)} />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
                       <label
-                        htmlFor="title"
+                        htmlFor="setor"
                         className="block text-sm font-medium text-gray-700 dark:text-white"
                       >
                         Setor
                       </label>
                       <select
-                        id="title"
-                        name="title"
-                        autoComplete="title-name"
+                        id="setor"
+                        name="setor"
+                        autoComplete="setor-name"
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm font-Jakarta dark:text-white"
+                        onChange={() => { }}
                       >
                         <option>1</option>
                         <option>2</option>
@@ -186,23 +204,35 @@ function Formulary() {
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="departament"
-                          className="block text-sm font-medium text-gray-700 dark:text-white"
-                        >
-                          Departamento
-                        </label>
-                        <input
-                          type="text"
-                          name="departament"
-                          id="departament"
-                          autoComplete="departament-name"
-                          className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 shadow-sm dark:shadow-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
-                        />
-                      </div>
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-medium text-gray-700 dark:text-white"
+                      >
+                        Telefone
+                      </label>
+                      <input
+                        type="text"
+                        name="phone"
+                        id="phone"
+                        autoComplete="phone"
+                        className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 shadow-sm dark:shadow-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-700 dark:opacity-80 px-4 py-3 text-right sm:px-6">
+                <div className="flex justify-end bg-gray-50 dark:bg-gray-700 dark:opacity-80 px-4 py-3 text-right sm:px-6">
+                  {loading && <>
+                  <div className="flex justify-end mr-3 mt-1">
+                      <Hourglass visible={true}
+                        height="30"
+                        width="30"
+                        ariaLabel="hourglass-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        colors={['#050b14', '#72a1ed']} />
+                    </div>
+                  </>}
                   <button
                     type="submit"
                     className="inline-flex justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
