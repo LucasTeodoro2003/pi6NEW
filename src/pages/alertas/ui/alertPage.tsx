@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../../App/authPages";
 import { api } from "../../../App/serviceApi";
 import { Person } from "../../../Entities/employee";
 import { User } from "../../../Entities/users";
 import { BackgroundAlert } from "../../../widgets/backGround";
 import { Header } from "../../../widgets/header";
 import { Sidebar } from "../../../widgets/SideBar";
+import { NotFoundPage } from "../../notFound";
 
 function AlertPage() {
+  const { isLoggedIn, email } = useAuth();
+
   const navigate = useNavigate();
 
   const [people, setPeople] = useState<Person[]>([]);
@@ -15,47 +19,32 @@ function AlertPage() {
 
 
 
-  const getCachedData = (key: string) => {
-    const cachedData = localStorage.getItem(key);
-    return cachedData ? JSON.parse(cachedData) : null;
-  };
-  const setCachedData = (key: string, data: any) => {
-    localStorage.setItem(key, JSON.stringify(data));
-  };
-
+  useEffect(() => {
+    api.get("/PersonController/GetPerson?email=" + email)
+      .then((response) => {
+        const fetchedUser = response.data.return;
+        setUser(fetchedUser);
+      })
+      .catch((err) => {
+        console.error("Aconteceu um erro: " + err);
+      });
+  }, [email,]);
 
   useEffect(() => {
-    const cachedPeople = getCachedData('people');
-    if (cachedPeople) {
-      setPeople(cachedPeople);
-    } else {
-      api.get("/PersonController/GetPersons")
-        .then((response) => {
-          setPeople(response.data);
-          setCachedData('people', response.data);
-        })
-        .catch((err) => {
-          console.error("Aconteceu um erro: " + err);
-        });
-    }
-  }, []);
+    api.get("/PersonController/GetAllPerson")
+      .then((response) => {
+        const fetchedUser = response.data.return;
+        setPeople(fetchedUser);
+      })
+      .catch((err) => {
+        console.error("Aconteceu um erro: " + err);
+      });
+  }, [email,]);
 
-  useEffect(() => {
-    const cachedUser = getCachedData('user');
-    if (cachedUser) {
-      setUser(cachedUser);
-    } else {
-      api.get("/PersonController/GetPersons")
-        .then((response) => {
-          const fetchedUser = response.data[0] || null;
-          setUser(fetchedUser);
-          setCachedData('user', fetchedUser);
-        })
-        .catch((err) => {
-          console.error("Aconteceu um erro: " + err);
-        });
-    }
-  }, []);
+
+  if (!isLoggedIn) {
+    return <NotFoundPage />;
+  }
 
   return (
     <main>

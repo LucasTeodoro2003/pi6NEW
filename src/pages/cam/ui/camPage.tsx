@@ -1,10 +1,12 @@
 import { useEffect, useState} from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../../App/authPages";
 import { api } from "../../../App/serviceApi";
 import { User } from "../../../Entities/users";
 import { BackgroundCam } from "../../../widgets/backGround";
 import { Header } from "../../../widgets/header";
 import { Sidebar } from "../../../widgets/SideBar";
+import { NotFoundPage } from "../../notFound";
 
 function CamPage() {
   useEffect(() => {
@@ -12,32 +14,26 @@ function CamPage() {
   });
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+  const { isLoggedIn, email } = useAuth();
 
 
-  const getCachedData = (key: string) => {
-    const cachedData = localStorage.getItem(key);
-    return cachedData ? JSON.parse(cachedData) : null;
-  };
-  const setCachedData = (key: string, data: any) => {
-    localStorage.setItem(key, JSON.stringify(data));
-  };
+
 
   useEffect(() => {
-    const cachedUser = getCachedData('user');
-    if (cachedUser) {
-      setUser(cachedUser);
-    } else {
-      api.get("/User/GetUser")
-        .then((response) => {
-          const fetchedUser = response.data[0] || null;
-          setUser(fetchedUser);
-          setCachedData('user', fetchedUser);
-        })
-        .catch((err) => {
-          console.error("Aconteceu um erro: " + err);
-        });
-    }
-  }, []);
+    api.get("/PersonController/GetPerson?email=" + email)
+      .then((response) => {
+        const fetchedUser = response.data.return;
+        setUser(fetchedUser);
+      })
+      .catch((err) => {
+        console.error("Aconteceu um erro: " + err);
+      });
+  }, [email,]);
+
+
+  if (!isLoggedIn) {
+    return <NotFoundPage />;
+  }
 
   return (
     <main>
