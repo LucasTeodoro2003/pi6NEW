@@ -1,10 +1,8 @@
 import { FormEvent, useState } from "react";
 import { Hourglass } from "react-loader-spinner";
-import { useNavigate } from "react-router";
 import { api } from "../../../App/serviceApi";
 
 function Formulary() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
