@@ -14,8 +14,8 @@ const GoogleMaps: React.FC<GoogleMapsProps> = ({ lat, lng, isDarkMode }) => {
     });
 
     const containerStyle = {
-        width: '400px',
-        height: '400px'
+        width: '250px',
+        height: '250px'
     };
 
     const darkModeStyles = [
