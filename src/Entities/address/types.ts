@@ -6,7 +6,7 @@ export interface Address {
   state: string,
   district: string,
   city: string,
-  lat: string,
-  lng: string,
+  lat: number,
+  lng: number,
   name: string,
 }

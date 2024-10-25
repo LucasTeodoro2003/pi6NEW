@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Address } from "../../../Entities/address";
 import { User } from "../../../Entities/users";
+import { GoogleMaps } from "../../../shared/ui";
 
 interface TableLocationProps {
   address: Address[];
@@ -8,22 +9,28 @@ interface TableLocationProps {
 }
 
 interface AddressNew extends Address {
-  address_name: string,
-  address_type: string,
-  district: string,
-  city: string,
-  state: string,
-  lat: string,
-  lng: string,
-  name: string,
+  address_name: string;
+  address_type: string;
+  district: string;
+  city: string;
+  state: string;
+  lat: number;
+  lng: number;
+  name: string;
 }
 
 const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
   const [newAddress, setNewAddress] = useState<AddressNew[]>([]);
-  const cep = require('awesome-cep');
+  const cep = require("awesome-cep");
+
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    // Função para buscar os detalhes dos CEPs
+    const currentTheme = document.body.classList.contains("dark");
+    setIsDark(currentTheme);
+  }, []);
+
+  useEffect(() => {
     const fetchAddressDetails = async () => {
       const updatedAddresses = await Promise.all(
         address.map(async (addr) => {
@@ -36,9 +43,9 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
               district: resp.district,
               city: resp.city,
               state: resp.state,
-              lat: resp.lat,
-              lgn: resp.lgn,
-              name: resp.name
+              lat: Number(resp.lat),
+              lng: Number(resp.lng),
+              name: resp.name,
             };
           } catch (error) {
             console.error("Erro ao buscar CEP:", error);
@@ -52,37 +59,39 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
     fetchAddressDetails();
   }, [address, cep]);
 
-
-
-
   return (
     <ul className="ml-4 mt-4 mr-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {newAddress.map((addr) => {
-        console.log("lucas", addr)
+        const isValidLatLng =
+          typeof addr.lat === "number" && !isNaN(addr.lat) &&
+          typeof addr.lng === "number" && !isNaN(addr.lng);
+
         return (
-          <li key={addr.id}
+          <li
+            key={addr.id}
             className="col-span-1 h-fit divide-y divide-gray-200 rounded-lg bg-white dark:bg-gray-700 shadow"
           >
             <div className="flex w-full items-center justify-between space-x-6 p-6">
               <div className="flex-1 truncate">
                 <div className="flex items-center space-x-3">
-                  <h3 className="truncate text  -sm font-medium text-gray-900 dark:text-white">
-                    {addr.lat}
+                  <h3 className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                    {isValidLatLng ? (
+                      <GoogleMaps lat={addr.lat} lng={addr.lng} isDarkMode={isDark} />
+                    ) : (
+                      <p>Localização não disponível</p>
+                    )}
                   </h3>
                 </div>
               </div>
             </div>
             <div>
-              <div
-                className="overflow-hidden transition-all duration-200 ease-in-out max-h-96" >
+              <div className="overflow-hidden transition-all duration-200 ease-in-out max-h-96">
                 <div className="p-4">
                   <ul>
                     {user?.name}
                     {addr?.cep}
                   </ul>
-                  <ul>
-                    {user?.email}
-                  </ul>
+                  <ul>{user?.email}</ul>
                 </div>
               </div>
             </div>
@@ -92,6 +101,5 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
     </ul>
   );
 };
-
 
 export { TableLocation };
