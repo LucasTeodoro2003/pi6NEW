@@ -10,7 +10,7 @@ interface GoogleMapsProps {
 const GoogleMaps: React.FC<GoogleMapsProps> = ({ lat, lng, isDarkMode }) => {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyAVxA8L6_wCmbaCyfvrEYiDg3uxgDMRaFo"
+        googleMapsApiKey: process.env.API_KEY || ''
     });
 
     const containerStyle = {
