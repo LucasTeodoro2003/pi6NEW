@@ -1,6 +1,7 @@
 import React from "react";
 import { Address } from "../../../Entities/address";
 import { User } from "../../../Entities/users";
+import { FormularyLocation } from "../../formulayLocation";
 import { TableLocation } from "../../tablesLocation";
 interface NewBackgroundHomeProps {
   address: Address[];
