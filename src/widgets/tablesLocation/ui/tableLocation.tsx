@@ -1,5 +1,6 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { Address } from "../../../Entities/address";
 import { User } from "../../../Entities/users";
 import { GoogleMaps } from "../../../shared/ui";
@@ -22,6 +23,7 @@ interface AddressNew extends Address {
 const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
   const [newAddress, setNewAddress] = useState<AddressNew[]>([]);
   const cep = require("awesome-cep");
+  const navigate = useNavigate();
 
   const [isDark, setIsDark] = useState(false);
 
@@ -71,6 +73,7 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
               <button
                 type="button"
                 className="mt-3 inline-flex items-center rounded-full border border-transparent bg-gray-300 dark:bg-gray-600 p-3 text-white shadow-sm hover:bg-gray-600 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                onClick={() => navigate("/config")}
               >
                 <PlusIcon className="h-6 w-6 " aria-hidden="true" />
               </button>

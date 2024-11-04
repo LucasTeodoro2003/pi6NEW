@@ -11,11 +11,17 @@ import {
 } from "@heroicons/react/20/solid";
 import { Fragment } from "react";
 
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-function DropConfig() {
+interface DropConfigProps {
+  onAddLocationClick: () => void;
+}
+
+
+function DropConfig({ onAddLocationClick }: DropConfigProps) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -39,7 +45,7 @@ function DropConfig() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm w-full"
@@ -53,10 +59,23 @@ function DropConfig() {
                 </button>
               )}
             </Menu.Item>
+            <div className="py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={onAddLocationClick}
+                    className="group flex items-center px-4 py-2 text-sm w-full"
+                  >
+                    <PencilSquareIcon className="mr-3 h-5 w-5" aria-hidden="true" />
+                    Adicionar Localização
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm w-full"
@@ -75,7 +94,7 @@ function DropConfig() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm w-full"
@@ -92,7 +111,7 @@ function DropConfig() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm w-full"
@@ -111,7 +130,7 @@ function DropConfig() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm w-full"
@@ -128,7 +147,7 @@ function DropConfig() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm w-full"
@@ -147,7 +166,7 @@ function DropConfig() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm w-full"

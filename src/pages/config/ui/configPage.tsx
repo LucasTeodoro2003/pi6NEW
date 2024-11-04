@@ -9,9 +9,6 @@ import { Sidebar } from "../../../widgets/SideBar";
 import { NotFoundPage } from "../../notFound";
 
 function ConfigPage() {
-  useEffect(() => {
-    fetch("");
-  });
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const { isLoggedIn, id } = useAuth();

@@ -1,19 +1,25 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router"; 
+import { api } from "../../../App/serviceApi";
 
 const FormularyLocation = () => {
   const [formData, setFormData] = useState({
     name: "",
     address: "",
-    number: 0,
+    number: "",
     city: "",
-    state: 1,
+    state: "",
     cep: "",
     latitude: 0,
     longitude: 0,
-    listPerson: [""], // Inicializa com um campo vazio para a lista de pessoas
+    aditionalInfo: ""
   });
+  
+  const [isFetching, setIsFetching] = useState(false);
+  const navigate = useNavigate();
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -21,14 +27,51 @@ const FormularyLocation = () => {
     }));
   };
 
-  const handleSubmit = (e:any) => {
+  useEffect(() => {
+    const fetchAddressDetails = async () => {
+      if (formData.cep.length === 8) {
+        setIsFetching(true);
+        try {
+          const resp = await axios.get(`https://cep.awesomeapi.com.br/json/${formData.cep}`);
+          const { address_name, city, state, lat, lng } = resp.data;
+
+          setFormData((prev) => ({
+            ...prev,
+            address: address_name,
+            city,
+            state,
+            latitude: Number(lat),
+            longitude: Number(lng),
+          }));
+        } catch (error) {
+          console.error("Erro ao buscar CEP:", error);
+        } finally {
+          setIsFetching(false);
+        }
+      }
+    };
+
+    fetchAddressDetails();
+  }, [formData.cep]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Dados do formulário:", formData);
-    // Aqui você pode adicionar a lógica para enviar os dados
+    try {
+      const response = await api.post("/LocationController/CreateLocation", {
+        ...formData,
+        number: Number(formData.number),
+        state: Number(formData.state),
+      });
+      console.log(response.data);
+      window.location.reload();
+      navigate("/home");
+    } catch (err) {
+      console.error("Erro ao enviar o formulário:", err);
+    }
   };
 
   return (
-    <div className="flex h-screen ml-64">
+    <div className="flex h-screen">
       <div className="bg-white dark:bg-gray-800 w-full h-full flex justify-center items-center">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 w-96">
           <h2 className="text-center text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
@@ -37,10 +80,10 @@ const FormularyLocation = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="name">
-                Nome:
+                Nome do Local:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
                 type="text"
                 id="name"
                 name="name"
@@ -50,11 +93,26 @@ const FormularyLocation = () => {
               />
             </div>
             <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="cep">
+                CEP:
+              </label>
+              <input
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                type="text"
+                id="cep"
+                name="cep"
+                value={formData.cep}
+                onChange={handleChange}
+                required
+              />
+              {isFetching && <p className="text-sm text-gray-500">Buscando endereço...</p>}
+            </div>
+            <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="address">
                 Endereço:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
                 type="text"
                 id="address"
                 name="address"
@@ -64,25 +122,11 @@ const FormularyLocation = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="number">
-                Número:
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                type="number"
-                id="number"
-                name="number"
-                value={formData.number}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="city">
                 Cidade:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
                 type="text"
                 id="city"
                 name="city"
@@ -96,8 +140,8 @@ const FormularyLocation = () => {
                 Estado:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                type="number"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                type="text"
                 id="state"
                 name="state"
                 value={formData.state}
@@ -106,21 +150,21 @@ const FormularyLocation = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="cep">
-                CEP:
+              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="number">
+                Nº:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                type="text"
-                id="cep"
-                name="cep"
-                value={formData.cep}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                type="number"
+                id="number"
+                name="number"
+                value={formData.number}
                 onChange={handleChange}
                 required
               />
             </div>
             <button
-              className="w-full bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition duration-200"
+              className="w-full bg-gray-500 text-white font-semibold py-2 rounded-lg hover:bg-gray-700 transition duration-200"
               type="submit"
             >
               Enviar
@@ -132,4 +176,4 @@ const FormularyLocation = () => {
   );
 };
 
-export {FormularyLocation};
+export { FormularyLocation };

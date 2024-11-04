@@ -1,29 +1,51 @@
-import { FormEvent, useState } from "react";
+import { useMask } from "@react-input/mask";
+import React, { FormEvent, useState } from "react";
 import { Hourglass } from "react-loader-spinner";
 import { api } from "../../../App/serviceApi";
+import { User } from "../../../Entities/users";
 
-function Formulary() {
+interface FormularyProps {
+  user: User | null;
+}
+
+const Formulary: React.FC<FormularyProps> = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
-  const [password, setPassword] = useState("")
+  const [localizacao, setLocalizacao] = useState("")
+  // const [locations, setLocations] = useState([])
 
   const verifyButton = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true);
     e.preventDefault();
 
     try {
-      const response = await api.post("/PersonController/CreatePerson", { email, password, name, phone });
+      const response = await api.post("/PersonController/CreatePerson", { email, name, phone: sendPhone, permissions: [{ role: 1, locationId: localizacao }] });
       console.log(response.data)
-
-
       window.location.reload()
     } catch (err) {
-      console.log("ALgum item faltando!" +err);
+      console.log("Algum item faltando!" + err);
     }
     setLoading(false);
   };
+
+  const mask = useMask({
+    mask: '(__) _ ____-____',
+    replacement: { _: /\d/ },
+  });
+
+  const sendPhone = phone.replace(/\D/g, '');
+  // useEffect(() => {
+  //   api.get("/PersonController/GetLocationsByPerson?personId=" + user?.id)
+  //     .then((response) => {
+  //       const listLocations = response.data.return;
+  //       setLocations(listLocations)
+  //     })
+  //     .catch((err) => {
+  //       console.error("Aconteceu um erro: " + err);
+  //     });
+  // }, [user?.id]);
 
   return (
     <>
@@ -157,11 +179,7 @@ function Formulary() {
                         id="name"
                         autoComplete="given-name"
                         className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 dark:shadow-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setName(value);
-                          setPassword(value);
-                        }}
+                        onChange={(e) => setName(e.target.value)}
                       />
                     </div>
 
@@ -186,18 +204,24 @@ function Formulary() {
                         htmlFor="setor"
                         className="block text-sm font-medium text-gray-700 dark:text-white"
                       >
-                        Setor
+                        Localização
                       </label>
                       <select
                         id="setor"
                         name="setor"
                         autoComplete="setor-name"
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm font-Jakarta dark:text-white"
-                        onChange={() => { }}
+                        onChange={(e) => setLocalizacao(e.target.value)}
                       >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
+                        {/* {user && user.email && user.email.length > 0 ? (
+                          user.email.map((permission, index) => (
+                            <option key={index} value={permission.locationId}>
+                              {permission.locationId}
+                            </option>
+                          ))
+                        ) : ( */}
+                        <option value="">Todas as localizações</option>
+                        {/* // )} */}
                       </select>
                     </div>
 
@@ -209,6 +233,7 @@ function Formulary() {
                         Telefone
                       </label>
                       <input
+                        ref={mask}
                         type="text"
                         name="phone"
                         id="phone"
@@ -221,7 +246,7 @@ function Formulary() {
                 </div>
                 <div className="flex justify-end bg-gray-50 dark:bg-gray-700 dark:opacity-80 px-4 py-3 text-right sm:px-6">
                   {loading && <>
-                  <div className="flex justify-end mr-3 mt-1">
+                    <div className="flex justify-end mr-3 mt-1">
                       <Hourglass visible={true}
                         height="30"
                         width="30"

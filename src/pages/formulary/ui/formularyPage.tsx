@@ -44,7 +44,7 @@ function FormularyPage() {
         }}
       />
       <Sidebar user={user} />
-      <BackgroundFormulary />
+      <BackgroundFormulary user={user}/>
     </main>
   );
 }
