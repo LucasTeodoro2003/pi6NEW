@@ -33,13 +33,13 @@ const FormularyLocation = () => {
         setIsFetching(true);
         try {
           const resp = await axios.get(`https://cep.awesomeapi.com.br/json/${formData.cep}`);
-          const { address_name, city, state, lat, lng } = resp.data;
+          const { address_name, city, lat, lng } = resp.data;
 
           setFormData((prev) => ({
             ...prev,
             address: address_name,
             city,
-            state,
+            state: "1",
             latitude: Number(lat),
             longitude: Number(lng),
           }));
