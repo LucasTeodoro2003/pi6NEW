@@ -14,13 +14,13 @@ function ConfigPage() {
   });
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-  const { isLoggedIn, email } = useAuth();
+  const { isLoggedIn, id } = useAuth();
 
 
 
 
   useEffect(() => {
-    api.get("/PersonController/GetPerson?email=" + email)
+    api.get("/PersonController/GetPerson?email=" + id)
       .then((response) => {
         const fetchedUser = response.data.return;
         setUser(fetchedUser);
@@ -28,7 +28,7 @@ function ConfigPage() {
       .catch((err) => {
         console.error("Aconteceu um erro: " + err);
       });
-  }, [email,]);
+  }, [id]);
 
 
   if (!isLoggedIn) {

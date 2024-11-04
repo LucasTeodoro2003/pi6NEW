@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
   const navigate = useNavigate();
 
   const checkAuth = useCallback(() => {
@@ -13,7 +13,7 @@ const useAuth = () => {
      if (token && token.split('.').length === 3) {
       try {
         const decoded : any = jwtDecode(token);
-        setEmail(decoded.Email);
+        setId(decoded.id);
 
         if (decoded.exp * 1000 < Date.now()) {
           console.log("Token expirado");
@@ -41,7 +41,7 @@ const useAuth = () => {
     checkAuth();
   }, [checkAuth]);
 
-  return { isLoggedIn, email };
+  return { isLoggedIn, id };
 };
 
 export { useAuth };

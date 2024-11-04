@@ -13,19 +13,20 @@ function NewHomePage() {
   const [show, setShow] = useState(false);
   const [addressList, setAddressList] = useState<Address[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  const { isLoggedIn, email } = useAuth();
+  const { isLoggedIn, id } = useAuth();
   const cep = require('awesome-cep');
 
   useEffect(() => {
-    api.get("/PersonController/GetPerson?email=" + email)
+    api.get("/PersonController/GetPerson?email=" + id)
       .then((response) => {
         const fetchedUser = response.data.return;
         setUser(fetchedUser);
+        console.log(fetchedUser)
       })
       .catch((err) => {
         console.error("Aconteceu um erro: " + err);
       });
-  }, [email,]);
+  }, [id,]);
 
   useEffect(() => {
     const fetchAddressDetails = async () => {

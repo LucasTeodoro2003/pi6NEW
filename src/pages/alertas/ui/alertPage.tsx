@@ -10,7 +10,7 @@ import { Sidebar } from "../../../widgets/SideBar";
 import { NotFoundPage } from "../../notFound";
 
 function AlertPage() {
-  const { isLoggedIn, email } = useAuth();
+  const { isLoggedIn, id } = useAuth();
 
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ function AlertPage() {
 
 
   useEffect(() => {
-    api.get("/PersonController/GetPerson?email=" + email)
+    api.get("/PersonController/GetPerson?email=" + id)
       .then((response) => {
         const fetchedUser = response.data.return;
         setUser(fetchedUser);
@@ -28,7 +28,7 @@ function AlertPage() {
       .catch((err) => {
         console.error("Aconteceu um erro: " + err);
       });
-  }, [email,]);
+  }, [id]);
 
   useEffect(() => {
     api.get("/PersonController/GetAllPerson")
@@ -39,7 +39,7 @@ function AlertPage() {
       .catch((err) => {
         console.error("Aconteceu um erro: " + err);
       });
-  }, [email,]);
+  }, [id]);
 
 
   if (!isLoggedIn) {
