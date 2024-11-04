@@ -21,18 +21,18 @@ function NewHomePage() {
       .then((response) => {
         const fetchedUser = response.data.return;
         setUser(fetchedUser);
-        console.log(fetchedUser)
+        console.log("FUNCIONOU")
       })
       .catch((err) => {
         console.error("Aconteceu um erro: " + err);
       });
-  }, [id,]);
+  }, [id]);
 
   useEffect(() => {
     const fetchAddressDetails = async () => {
       if (user && user.permissions.length > 0) {
             try {
-              const response = await api.get("/LocationController/GetAllLocation");
+              const response = await api.get("/PersonController/GetLocationsByPerson?personId=" + id);
               const locations = response.data.return;
               setAddressList(locations);
             } catch (error) {
@@ -42,7 +42,7 @@ function NewHomePage() {
       }
     };
     fetchAddressDetails();
-  }, [user, cep]);
+  }, [user, cep, id]);
   
  
   if (!isLoggedIn) {
