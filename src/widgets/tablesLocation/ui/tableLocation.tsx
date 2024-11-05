@@ -73,7 +73,7 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
               <button
                 type="button"
                 className="mt-3 inline-flex items-center rounded-full border border-transparent bg-gray-300 dark:bg-gray-600 p-3 text-white shadow-sm hover:bg-gray-600 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-                onClick={() => navigate("/config")}
+                onClick={() => navigate("/config", { state: { openForm: true } })}
               >
                 <PlusIcon className="h-6 w-6 " aria-hidden="true" />
               </button>

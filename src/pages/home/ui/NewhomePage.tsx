@@ -17,6 +17,7 @@ function NewHomePage() {
   const cep = require('awesome-cep');
 
   useEffect(() => {
+    console.log(id)
     api.get("/PersonController/GetPerson?email=" + id)
       .then((response) => {
         const fetchedUser = response.data.return;
@@ -28,21 +29,36 @@ function NewHomePage() {
       });
   }, [id]);
 
+  const searchRole = user?.permissions[0].role;
+  console.log(searchRole) 
+
   useEffect(() => {
     const fetchAddressDetails = async () => {
-      if (user && user.permissions.length > 0) {
+        if (searchRole === 1){
             try {
-              const response = await api.get("/PersonController/GetLocationsByPerson?personId=" + id);
+              const response = await api.get("/LocationController/GetAllLocation");
               const locations = response.data.return;
               setAddressList(locations);
+              console.log(locations)
+              console.log("Usuario Supremo", setAddressList)
             } catch (error) {
               console.error("Erro ao buscar localizações:", error);
               return null;
+            }} else if (searchRole === 2){
+              try {
+                const response = await api.get("/PersonController/GetLocationsByPerson?personId=" + user?.email);
+                const locations = response.data.return;
+                console.log(locations)
+                setAddressList(locations);
+                console.log("O bosta", setAddressList)
+              } catch (error) {
+                console.error("Erro ao buscar localizações:", error);
+                return null;
+              }
             }
-      }
     };
     fetchAddressDetails();
-  }, [user, cep, id]);
+  }, [user, cep, id, searchRole]);
   
  
   if (!isLoggedIn) {
