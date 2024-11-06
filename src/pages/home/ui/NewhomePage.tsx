@@ -30,7 +30,6 @@ function NewHomePage() {
   }, [id]);
 
   const searchRole = user?.permissions[0].role;
-  console.log(searchRole) 
 
   useEffect(() => {
     const fetchAddressDetails = async () => {
@@ -39,8 +38,6 @@ function NewHomePage() {
               const response = await api.get("/LocationController/GetAllLocation");
               const locations = response.data.return;
               setAddressList(locations);
-              console.log(locations)
-              console.log("Usuario Supremo", setAddressList)
             } catch (error) {
               console.error("Erro ao buscar localizações:", error);
               return null;
@@ -48,7 +45,6 @@ function NewHomePage() {
               try {
                 const response = await api.get("/PersonController/GetLocationsByPerson?personId=" + user?.email);
                 const locations = response.data.return;
-                console.log(locations)
                 setAddressList(locations);
                 console.log("O bosta", setAddressList)
               } catch (error) {

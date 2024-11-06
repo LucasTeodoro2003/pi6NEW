@@ -1,8 +1,9 @@
 import { useMask } from "@react-input/mask";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Hourglass } from "react-loader-spinner";
 import { api } from "../../../App/serviceApi";
 import { User } from "../../../Entities/users";
+import { SucessMensage } from "../../../shared/ui";
 
 interface FormularyProps {
   user: User | null;
@@ -10,42 +11,68 @@ interface FormularyProps {
 
 const Formulary: React.FC<FormularyProps> = ({ user }) => {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("")
-  const [name, setName] = useState("")
-  const [phone, setPhone] = useState("")
-  const [localizacao, setLocalizacao] = useState("")
-  // const [locations, setLocations] = useState([])
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [localizacao, setLocalizacao] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [cargo, setCargo] = useState<number>(1);
+  const [mensage, setMensage] = useState(false);
 
   const verifyButton = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true);
     e.preventDefault();
 
     try {
-      const response = await api.post("/PersonController/CreatePerson", { email, name, phone: sendPhone, permissions: [{ role: 1, locationId: localizacao }] });
-      console.log(response.data)
-      window.location.reload()
+      const response = await api.post("/PersonController/CreatePerson", {
+        name,
+        phone: sendPhone,
+        email,
+        permissions: [{ role: cargo, locationId: localizacao }],
+      });
+      console.log(response.data);
+      setMensage(true);
+      window.location.reload();
     } catch (err) {
       console.log("Algum item faltando!" + err);
     }
     setLoading(false);
+    setMensage(false);
   };
 
+  console.log(locations);
+
   const mask = useMask({
-    mask: '(__) _ ____-____',
+    mask: "(__) _ ____-____",
     replacement: { _: /\d/ },
   });
 
-  const sendPhone = phone.replace(/\D/g, '');
-  // useEffect(() => {
-  //   api.get("/PersonController/GetLocationsByPerson?personId=" + user?.id)
-  //     .then((response) => {
-  //       const listLocations = response.data.return;
-  //       setLocations(listLocations)
-  //     })
-  //     .catch((err) => {
-  //       console.error("Aconteceu um erro: " + err);
-  //     });
-  // }, [user?.id]);
+  const sendPhone = phone.replace(/\D/g, "");
+  const searchRole = user?.permissions[0].role;
+
+  useEffect(() => {
+    if (searchRole === 1) {
+      api
+        .get("/LocationController/GetAllLocation")
+        .then((response) => {
+          const listLocations = response.data.return;
+          setLocations(listLocations);
+        })
+        .catch((err) => {
+          console.error("Aconteceu um erro: " + err);
+        });
+    } else {
+      api
+        .get("/PersonController/GetLocationsByPerson?personId=" + user?.email)
+        .then((response) => {
+          const listLocations = response.data.return;
+          setLocations(listLocations);
+        })
+        .catch((err) => {
+          console.error("Aconteceu um erro: " + err);
+        });
+    }
+  }, [user?.email, searchRole]);
 
   return (
     <>
@@ -196,7 +223,8 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         id="email"
                         autoComplete="email"
                         className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 shadow-sm dark:shadow-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
-                        onChange={(e) => setEmail(e.target.value)} />
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
@@ -213,15 +241,15 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm font-Jakarta dark:text-white"
                         onChange={(e) => setLocalizacao(e.target.value)}
                       >
-                        {/* {user && user.email && user.email.length > 0 ? (
-                          user.email.map((permission, index) => (
-                            <option key={index} value={permission.locationId}>
-                              {permission.locationId}
+                        {user && user.email.length > 0 ? (
+                          locations.map((location: any, index) => (
+                            <option key={location.id} value={location.id}>
+                              {location.name}
                             </option>
                           ))
-                        ) : ( */}
-                        <option value="">Todas as localizações</option>
-                        {/* // )} */}
+                        ) : (
+                          <option value="">Todas as localizações</option>
+                        )}
                       </select>
                     </div>
 
@@ -242,20 +270,48 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         onChange={(e) => setPhone(e.target.value)}
                       />
                     </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="cargo"
+                        className="block text-sm font-medium text-gray-700 dark:text-white"
+                      >
+                        Cargo
+                      </label>
+                      <select
+                        id="cargo"
+                        name="cargo"
+                        value={cargo}
+                        onChange={(e) => setCargo(Number(e.target.value))}
+                        className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm font-Jakarta dark:text-white"
+                      >
+                        <option value={1}>Administrador</option>
+                        <option value={2}>Gerente</option>
+                        <option value={3}>Funcionario</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 <div className="flex justify-end bg-gray-50 dark:bg-gray-700 dark:opacity-80 px-4 py-3 text-right sm:px-6">
-                  {loading && <>
-                    <div className="flex justify-end mr-3 mt-1">
-                      <Hourglass visible={true}
-                        height="30"
-                        width="30"
-                        ariaLabel="hourglass-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                        colors={['#050b14', '#72a1ed']} />
-                    </div>
-                  </>}
+                  {/* {mensage && ( */}
+                  <>
+                    <SucessMensage />
+                  </>
+                  {/* // )} */}
+                  {loading && (
+                    <>
+                      <div className="flex justify-end mr-3 mt-1">
+                        <Hourglass
+                          visible={true}
+                          height="30"
+                          width="30"
+                          ariaLabel="hourglass-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                          colors={["#050b14", "#72a1ed"]}
+                        />
+                      </div>
+                    </>
+                  )}
                   <button
                     type="submit"
                     className="inline-flex justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -270,6 +326,6 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
       </div>
     </>
   );
-}
+};
 
 export { Formulary };
