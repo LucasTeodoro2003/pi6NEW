@@ -32,12 +32,13 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
       });
       console.log(response.data);
       setMensage(true);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
     } catch (err) {
       console.log("Algum item faltando!" + err);
     }
     setLoading(false);
-    setMensage(false);
   };
 
   console.log(locations);
@@ -292,11 +293,9 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                   </div>
                 </div>
                 <div className="flex justify-end bg-gray-50 dark:bg-gray-700 dark:opacity-80 px-4 py-3 text-right sm:px-6">
-                  {/* {mensage && ( */}
-                  <>
-                    <SucessMensage />
-                  </>
-                  {/* // )} */}
+                  {mensage && (
+                      <SucessMensage />
+                  )}
                   {loading && (
                     <>
                       <div className="flex justify-end mr-3 mt-1">
