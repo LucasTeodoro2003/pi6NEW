@@ -18,6 +18,7 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
   const [locations, setLocations] = useState([]);
   const [cargo, setCargo] = useState<number>(1);
   const [mensage, setMensage] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
 
   const verifyButton = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -31,10 +32,8 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
         permissions: [{ role: cargo, locationId: localizacao }],
       });
       console.log(response.data);
-      setMensage(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 5000);
+      localStorage.setItem("showSuccessMessage", "true");
+      window.location.reload();
     } catch (err) {
       console.log("Algum item faltando!" + err);
     }
@@ -52,6 +51,22 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
   const searchRole = user?.permissions[0].role;
 
   useEffect(() => {
+    const showSuccessMessage = localStorage.getItem("showSuccessMessage");
+
+    if (showSuccessMessage === "true") {
+      setMensage(true);
+      localStorage.removeItem("showSuccessMessage");
+
+      setTimeout(() => {
+        setFadeOut(true);
+      }, 3000);
+
+      setTimeout(() => {
+        setMensage(false);
+        setFadeOut(false);
+      }, 4000);
+    }
+
     if (searchRole === 1) {
       api
         .get("/LocationController/GetAllLocation")
@@ -294,7 +309,13 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                 </div>
                 <div className="flex justify-end bg-gray-50 dark:bg-gray-700 dark:opacity-80 px-4 py-3 text-right sm:px-6">
                   {mensage && (
+                    <div
+                      className={`transition-opacity duration-1000 ${
+                        fadeOut ? "opacity-0" : "opacity-100"
+                      }`}
+                    >
                       <SucessMensage />
+                    </div>
                   )}
                   {loading && (
                     <>
