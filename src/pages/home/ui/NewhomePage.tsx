@@ -17,7 +17,6 @@ function NewHomePage() {
   const cep = require('awesome-cep');
 
   useEffect(() => {
-    console.log(id)
     api.get("/PersonController/GetPerson?email=" + id)
       .then((response) => {
         const fetchedUser = response.data.return;

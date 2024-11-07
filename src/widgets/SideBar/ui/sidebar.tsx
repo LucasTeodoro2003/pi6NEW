@@ -41,6 +41,7 @@ const Sidebar: React.FC<HomePagePromps> = ({ user }) => {
   const navegationPages = useNavigate();
   const deleteAll = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem("user")
     navegationPages("/Login");
   };
 

@@ -33,7 +33,7 @@ const FormularyLocation = () => {
         setIsFetching(true);
         try {
           const resp = await axios.get(`https://cep.awesomeapi.com.br/json/${formData.cep}`);
-          const { address_name, city, lat, lng } = resp.data;
+          const { address_name, city, lat, lng, } = resp.data;
 
           setFormData((prev) => ({
             ...prev,
@@ -61,6 +61,7 @@ const FormularyLocation = () => {
         ...formData,
         number: Number(formData.number),
         state: Number(formData.state),
+        aditionalInfo: formData.aditionalInfo,
       });
       console.log(response.data);
       window.location.reload();
@@ -71,19 +72,16 @@ const FormularyLocation = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="bg-white dark:bg-gray-800 w-full h-full flex justify-center items-center">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 w-96">
-          <h2 className="text-center text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-            Formulário de Localização
-          </h2>
+    <div className="flex h-full mb-auto">
+      <div className="bg-white dark:bg-gray-700 w-full h-auto flex justify-center items-baseline mb-auto rounded-2xl">
+        <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-6 w-96 items-baseline">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="name">
                 Nome do Local:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
                 type="text"
                 id="name"
                 name="name"
@@ -97,7 +95,7 @@ const FormularyLocation = () => {
                 CEP:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
                 type="text"
                 id="cep"
                 name="cep"
@@ -112,7 +110,7 @@ const FormularyLocation = () => {
                 Endereço:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
                 type="text"
                 id="address"
                 name="address"
@@ -126,7 +124,7 @@ const FormularyLocation = () => {
                 Cidade:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
                 type="text"
                 id="city"
                 name="city"
@@ -140,7 +138,7 @@ const FormularyLocation = () => {
                 Estado:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
                 type="text"
                 id="state"
                 name="state"
@@ -154,11 +152,25 @@ const FormularyLocation = () => {
                 Nº:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
                 type="number"
                 id="number"
                 name="number"
                 value={formData.number}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="number">
+                OUTRAS INFORMAÇÕES:
+              </label>
+              <input
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                type="text"
+                id="aditionalInfo"
+                name="aditionalInfo"
+                value={formData.aditionalInfo}
                 onChange={handleChange}
                 required
               />

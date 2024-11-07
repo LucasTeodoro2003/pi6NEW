@@ -13,20 +13,25 @@ function ConfigPage() {
   const [user, setUser] = useState<User | null>(null);
   const { isLoggedIn, id } = useAuth();
 
-
-
-
   useEffect(() => {
-    api.get("/PersonController/GetPerson?email=" + id)
+    api
+      .get("/PersonController/GetPerson?email=" + id)
       .then((response) => {
         const fetchedUser = response.data.return;
         setUser(fetchedUser);
+        localStorage.setItem("user", JSON.stringify(fetchedUser));
       })
       .catch((err) => {
         console.error("Aconteceu um erro: " + err);
       });
   }, [id]);
 
+  // const userFromLocalStorage = localStorage.getItem("user");
+  // const parsedUser = userFromLocalStorage
+  //   ? JSON.parse(userFromLocalStorage)
+  //   : "SEM DADOS";
+
+  // console.log("usuario dados:", parsedUser);
 
   if (!isLoggedIn) {
     return <NotFoundPage />;
