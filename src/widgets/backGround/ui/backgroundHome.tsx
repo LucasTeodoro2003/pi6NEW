@@ -33,7 +33,7 @@ const BackgroundHome: React.FC<BackgroundHomeProps> = ({
                     activeTab={activeTab}
                     VideosId={VideosId}
                   />
-                  <Table people={people} />
+                  <Table />
                 </div>
                 <div className="px-36 mx-36 mt-4">
                   <AlertEmployee people={people} />

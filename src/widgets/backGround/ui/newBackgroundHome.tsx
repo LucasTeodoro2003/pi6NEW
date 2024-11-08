@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Address } from "../../../Entities/address";
 import { User } from "../../../Entities/users";
+import { Table } from "../../tableEmployee";
 import { TableLocation } from "../../tablesLocation";
 interface NewBackgroundHomeProps {
   address: Address[];
@@ -11,15 +12,22 @@ const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
   address,
   user
 }) => {
+  const [buttonOn, setButtonOn] = useState(false);
 
+  const toggleTableLocation = () => {
+    setButtonOn(!buttonOn);
+  };
   
   return (
     <div className="flex h-screen ml-64">
       <div className="bg-white dark:bg-gray-800 w-full h-full">
         <div className="flex mt-5 bg-white dark:bg-gray-800">
           <div className="flex text-justify w-full justify-center items-center">
-            <TableLocation address={address} user={user} />
-            {}
+          {buttonOn ? (
+            <Table />
+          ) : (
+            <TableLocation address={address} user={user}  onButtonClick={toggleTableLocation} />
+             ) }
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { GoogleMaps } from "../../../shared/ui";
 interface TableLocationProps {
   address: Address[];
   user: User | null;
+  onButtonClick: () => void;
 }
 
 interface AddressNew extends Address {
@@ -21,7 +22,7 @@ interface AddressNew extends Address {
   listPerson: string[];
 }
 
-const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
+const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonClick }) => {
   const [newAddress, setNewAddress] = useState<AddressNew[]>([]);
   const cep = require("awesome-cep");
   const navigate = useNavigate();
@@ -39,7 +40,6 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
         address.map(async (addr) => {
           try {
             const resp = await cep.findCEP(addr.cep);
-            console.log(resp);
             return {
               ...addr,
               address_name: resp.address_name,
@@ -63,7 +63,10 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
     fetchAddressDetails();
   }, [address, cep]);
 
-  console.log(newAddress);
+  const handlePersonClick = (listPerson: string[]) => {
+    localStorage.setItem('listPerson', JSON.stringify(listPerson));
+    onButtonClick();
+  };
 
   return (
     <div className="items-center justify-center text-center">
@@ -133,7 +136,9 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
                       </ul>
                       <ul className="flex justify-between">
                         <td>Funcionários: </td>
+                        <button className="hover:underline" onClick={() => {handlePersonClick(addr.listPerson); onButtonClick()}}>
                         <td>{addr.listPerson.length}</td>
+                        </button>
                       </ul>
                     </div>
                   </div>

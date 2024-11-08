@@ -21,7 +21,6 @@ function NewHomePage() {
       .then((response) => {
         const fetchedUser = response.data.return;
         setUser(fetchedUser);
-        console.log("FUNCIONOU")
       })
       .catch((err) => {
         console.error("Aconteceu um erro: " + err);

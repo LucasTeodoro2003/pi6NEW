@@ -1,18 +1,44 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../../App/serviceApi";
 import { EmployeeRow, Person } from "../../../Entities/employee";
 
-interface TableProps {
-  people: Person[];
-}
+interface TableProps {}
 
-const Table: React.FC<TableProps> = ({ people }) => {
+const Table: React.FC<TableProps> = () => {
   const navigate = useNavigate();
+  const userFromLocalStorage = localStorage.getItem("user");
+  const user = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : null;
+  console.log(user);
+
+  const listPerson = JSON.parse(localStorage.getItem("listPerson") || "[]");
+  const email = listPerson[0];
+  console.log(email);
+
+  useEffect(() => {
+    const fetchPerson = async () => {
+      try {
+        const response = await api.get(
+          "/PersonController/GetPerson?email=" + email
+        );
+        console.log(response.data.return);
+      } catch (error) {
+        console.error("Pessoa não encontrada: ", error);
+      }
+    };
+
+    if (email) {
+      fetchPerson();
+    }
+  }, [email]);
 
   return (
     <div className="ml-6 w-full divide-y divide-gray-200 dark:divide-slate-700 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-600 shadow">
       <div className="flex justify-between items-center px-2 py-5 sm:px-6">
-        <h3 className="text-lg font-semibold font-Jakarta leading-6 text-gray-900 dark:text-white
-        ">
+        <h3
+          className="text-lg font-semibold font-Jakarta leading-6 text-gray-900 dark:text-white
+        "
+        >
           Funcionarios
         </h3>
         <button
@@ -49,9 +75,9 @@ const Table: React.FC<TableProps> = ({ people }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                {people.map((person) => (
+                {/* {people.map((person) => (
                   <EmployeeRow person={person} />
-                ))}
+                ))} */}
               </tbody>
             </table>
           </div>
