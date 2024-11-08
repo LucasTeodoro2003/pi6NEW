@@ -5,13 +5,11 @@ interface EmployeeRowProps {
 }
 
 export function EmployeeRow({ person }: EmployeeRowProps) {
+  function formatPhoneNumber(phone: any) {
+    if (!phone) return "";
 
-  function formatPhoneNumber(phone:any) {
-    if (!phone) return '';
-    
-    return phone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4');
+    return phone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2 $3-$4");
   }
-
 
   return (
     <tr key={person.id}>
@@ -37,8 +35,11 @@ export function EmployeeRow({ person }: EmployeeRowProps) {
           </div>
         </div>
       </td>
-      <td className="whitespace-nowrap px-1 py-4 text-sm text-gray-500">
-        <div className="text-gray-900 dark:text-white ">{formatPhoneNumber(person.phone)}</div>
+      <td className="whitespace-nowrap px-1 py-6 text-sm text-gray-500 flex items-center justify-center">
+        <img src="whatsapp.png" alt="logoWhatsapp" className="w-6 h-6 mr-2" />
+        <div className="text-gray-900 dark:text-white">
+          {formatPhoneNumber(person.phone)}
+        </div>
       </td>
       <td className="whitespace-nowrap px-0 py-4 text-sm text-gray-500 text-center">
         {/* {person.usingEpi ? (

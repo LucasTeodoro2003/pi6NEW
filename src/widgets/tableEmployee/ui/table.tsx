@@ -59,7 +59,7 @@ const Table: React.FC<TableProps> = () => {
                     scope="col"
                     className="px-6 py-3.5 text-center text-sm font-semibold font-Jakarta text-gray-900 dark:text-white"
                   >
-                    Epi's Completas
+                    Numero de Telefone
                   </th>
                 </tr>
               </thead>

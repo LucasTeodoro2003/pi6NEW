@@ -1,5 +1,5 @@
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Hourglass } from "react-loader-spinner";
 import { useNavigate } from "react-router";
 import { api } from "../../../App/serviceApi";
@@ -10,6 +10,12 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("listPerson")
+  }, []);
 
   const verifyButton = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true);
