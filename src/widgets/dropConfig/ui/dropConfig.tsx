@@ -56,8 +56,6 @@ function DropConfig({ onTabs }: DropConfigProps) {
                   </button>
                 )}
               </Menu.Item>
-            </div>
-            <div className="py-1">
             <Menu.Item>
               {({ active }) => (
                 <button
@@ -75,6 +73,8 @@ function DropConfig({ onTabs }: DropConfigProps) {
                 </button>
               )}
             </Menu.Item>
+            </div>
+            <div className="py-1">
             <Menu.Item>
               {({ active }) => (
                 <button

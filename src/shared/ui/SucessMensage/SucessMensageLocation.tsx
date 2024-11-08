@@ -1,6 +1,6 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
-function SucessMensage() {
+function SucessMensageLocation() {
   return (
     <div className="fixed inset-x-0 bottom-0 pb-2 sm:pb-5">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 ">
@@ -15,7 +15,7 @@ function SucessMensage() {
               </span>
               <p className="mx-2 truncate font-medium text-white">
                 <span className="hidden md:inline">
-                  Usuário Criado com Sucesso!
+                  Localização Atualizada com Sucesso!
                 </span>
               </p>
             </div>
@@ -26,4 +26,4 @@ function SucessMensage() {
   );
 }
 
-export { SucessMensage };
+export { SucessMensageLocation };

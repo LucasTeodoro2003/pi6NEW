@@ -1,12 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { Hourglass } from "react-loader-spinner";
 import { api } from "../../../App/serviceApi";
 
-// Função para buscar o endereço a partir do CEP (exemplo fictício)
+interface Location {
+  id: string;
+  name: string;
+  address: string;
+  number: number;
+  aditionalInfo: string;
+  city: string;
+  state: number;
+  cep: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface InputFieldProps {
+  label: string;
+  name: string;
+  value: string | number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
+  className?: string;
+}
+
 const fetchAddressByCep = async (cep: string) => {
   try {
-    // Aqui você pode substituir pela API que você estiver usando para consultar o CEP
-    const response = await api.get(`/someCepApi/${cep}`);
-    return response.data; // Supondo que a resposta da API contenha dados do endereço
+    const response = await api.get(`https://cep.awesomeapi.com.br/${cep}`);
+    return response.data;
   } catch (error) {
     console.error("Erro ao buscar endereço pelo CEP:", error);
     return null;
@@ -14,110 +35,105 @@ const fetchAddressByCep = async (cep: string) => {
 };
 
 const EdityFormularyLocation = () => {
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [formData, setFormData] = useState<Location | null>(null);
   const [isFetching, setIsFetching] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    address: "",
-    number: "",
-    city: "",
-    state: "",
-    cep: "",
-    latitude: 0,
-    longitude: 0,
-    aditionalInfo: "",
-  });
-  const [locations, setLocations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const userFromLocalStorage = localStorage.getItem("user");
-  const parsedUser = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : null;
-  const user = parsedUser;
+  const user = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : null;
   const searchRole = user?.permissions[0]?.role;
+  const personId = user?.id;
+
+  const fetchLocations = useCallback(async () => {
+    setIsFetching(true);
+    try {
+      const endpoint =
+        searchRole === 1
+          ? "/LocationController/GetAllLocation"
+          : `/LocationController/GetLocationsByPerson?personId=${personId}`;
+      const response = await api.get(endpoint);
+      if (Array.isArray(response.data.return)) {
+        setLocations(response.data.return);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar localizações:", error);
+      setLocations([]);
+    } finally {
+      setIsFetching(false);
+    }
+  }, [searchRole, personId]);
 
   useEffect(() => {
-    if (!user || searchRole !== 1) return;
-
-    const fetchLocations = async () => {
-      setIsFetching(true);
-      try {
-        const response = await api.get("/LocationController/GetAllLocation");
-        if (Array.isArray(response.data.return)) {
-          setLocations(response.data.return);
-        }
-        setIsFetching(false);
-
-        // Preencher formData com a primeira localização, se disponível
-        if (response.data.return && response.data.return.length > 0) {
-          const firstLocation = response.data.return[0];
-          setFormData({
-            ...formData,
-            address: firstLocation?.address || "",
-            city: firstLocation?.city || "",
-            state: firstLocation?.state || "",
-            latitude: firstLocation?.latitude || 0,
-            longitude: firstLocation?.longitude || 0,
-          });
-        }
-      } catch (error) {
-        console.error("Erro ao buscar localizações:", error);
-        setLocations([]);
-      } finally {
-        setIsFetching(false);
-      }
-    };
-
     fetchLocations();
-  }, [user, searchRole, formData]);
+  }, [fetchLocations]);
 
-  // Handler para mudanças no CEP
+  const handleLocationSelect = (id: string) => {
+    const location = locations.find((loc) => loc.id === id);
+    if (location) {
+      setSelectedLocation(id);
+      setFormData({ ...location });
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => (prev ? { ...prev, [name]: value } : null));
+  };
+
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCep = e.target.value;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      cep: newCep,
-    }));
 
-    // Se o CEP for alterado, fazer uma requisição para buscar os dados
-    if (newCep.length === 8) { // Checa se o CEP tem 8 caracteres
+    setFormData((prev) => (prev ? { ...prev, cep: newCep } : null));
+
+    if (newCep.length === 8) {
       setIsFetching(true);
       const addressData = await fetchAddressByCep(newCep);
       setIsFetching(false);
 
       if (addressData) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          address: addressData?.address || "",
-          city: addressData?.city || "",
-          state: addressData?.state || "",
-          latitude: addressData?.latitude || 0,
-          longitude: addressData?.longitude || 0,
-        }));
+        setFormData((prev) =>
+          prev
+            ? {
+                ...prev,
+                address: addressData?.address || "",
+                city: addressData?.city || "",
+                state: Number(addressData?.state) || 0,
+                latitude: addressData?.latitude || 0,
+                longitude: addressData?.longitude || 0,
+              }
+            : null
+        );
       }
     }
   };
 
-  // Handler para mudanças gerais no formulário
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Handler de submissão do formulário
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!formData || !formData.id) {
+      console.error("Formulário ou ID da localização está vazio");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const response = await api.post("/LocationController/CreateLocation", {
-        ...formData,
-        number: Number(formData.number),
-        state: formData.state, // Pode ser número ou string, dependendo do seu backend
-        aditionalInfo: formData.aditionalInfo,
-      });
-      console.log(response.data);
+      const response = await api.put(
+        `/LocationController/UpdateLocation?locationId=${formData.id}`,
+        {
+          ...formData,
+          number: Number(formData.number),
+        }
+      );
+      console.log("Localização atualizada com sucesso:", response.data);
+
+      localStorage.setItem("showSuccessMessage", "true");
       window.location.reload();
     } catch (err) {
-      console.error("Erro ao enviar o formulário:", err);
+      console.error("Erro ao atualizar a localização:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,155 +142,133 @@ const EdityFormularyLocation = () => {
       <div className="bg-white dark:bg-gray-700 w-full h-auto flex justify-center items-baseline mb-auto rounded-2xl">
         <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-6 w-96 items-baseline">
           <form onSubmit={handleSubmit}>
-            {/* Selecione a Localização */}
             <div className="mb-4">
               <label className="block text-gray-700 dark:text-gray-300 mb-2">
                 Selecione a Localização:
               </label>
               <select
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 dark:bg-gray-700 dark:text-white"
+                value={selectedLocation}
+                onChange={(e) => handleLocationSelect(e.target.value)}
                 required
               >
-                <option value="">Selecione uma localização</option>
-                {locations.length > 0 ? (
-                  locations.map((location) => (
-                    <option key={location.id} value={location.id}>
-                      {location.name} - {location.address}
-                    </option>
-                  ))
-                ) : (
-                  <option value="">Nenhuma localização disponível</option>
-                )}
+                <option className="dark:text-white" value="">
+                  Selecione uma localização
+                </option>
+                {locations.map((location) => (
+                  <option
+                    key={location.id}
+                    value={location.id}
+                    className="dark:text-white"
+                  >
+                    {location.name} - {location.address}
+                  </option>
+                ))}
               </select>
             </div>
 
-            {/* CEP */}
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 dark:text-gray-300 mb-2"
-                htmlFor="cep"
-              >
-                CEP:
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
-                type="text"
-                id="cep"
-                name="cep"
-                value={formData.cep}
-                onChange={handleCepChange} // Mudança de CEP chama a função para alterar os dados
-                required
-              />
-              {isFetching && <p className="text-sm text-gray-500">Buscando endereço...</p>}
-            </div>
+            {formData && (
+              <>
+                <InputField
+                  label="Nome"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="text-gray-700 dark:text-white"
+                />
+                <InputField
+                  label="CEP"
+                  name="cep"
+                  value={formData.cep}
+                  onChange={handleCepChange}
+                  className="text-gray-700 dark:text-white"
+                />
+                {isFetching && (
+                  <p className="text-sm text-gray-500 dark:text-white">
+                    Buscando endereço...
+                  </p>
+                )}
+                <InputField
+                  label="Endereço"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="text-gray-700 dark:text-white"
+                />
+                <InputField
+                  label="Cidade"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="text-gray-700 dark:text-white"
+                />
+                <InputField
+                  label="Estado"
+                  name="state"
+                  value={formData.state.toString()}
+                  onChange={handleChange}
+                  className="text-gray-700 dark:text-white"
+                />
+                <InputField
+                  label="Nº"
+                  name="number"
+                  type="number"
+                  value={formData.number.toString()}
+                  onChange={handleChange}
+                  className="text-gray-700 dark:text-white"
+                />
+                <InputField
+                  label="Outras Informações"
+                  name="aditionalInfo"
+                  value={formData.aditionalInfo}
+                  onChange={handleChange}
+                  className="text-gray-700 dark:text-white"
+                />
 
-            {/* Endereço */}
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 dark:text-gray-300 mb-2"
-                htmlFor="address"
-              >
-                Endereço:
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
-                type="text"
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Cidade */}
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 dark:text-gray-300 mb-2"
-                htmlFor="city"
-              >
-                Cidade:
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
-                type="text"
-                id="city"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Estado */}
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 dark:text-gray-300 mb-2"
-                htmlFor="state"
-              >
-                Estado:
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
-                type="text"
-                id="state"
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Número */}
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 dark:text-gray-300 mb-2"
-                htmlFor="number"
-              >
-                Nº:
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
-                type="number"
-                id="number"
-                name="number"
-                value={formData.number}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Outras Informações */}
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 dark:text-gray-300 mb-2"
-                htmlFor="aditionalInfo"
-              >
-                OUTRAS INFORMAÇÕES:
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
-                type="text"
-                id="aditionalInfo"
-                name="aditionalInfo"
-                value={formData.aditionalInfo}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Botão de Enviar */}
-            <button
-              className="w-full bg-gray-500 text-white font-semibold py-2 rounded-lg hover:bg-gray-700 transition duration-200"
-              type="submit"
-            >
-              Criar Localização
-            </button>
+                <button className="w-full bg-gray-500 text-white font-semibold py-2 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-950 dark:bg-gray-800">
+                  Atualizar Localização
+                </button>
+                {loading && (
+                  <div className="flex justify-center mr-3 mt-4">
+                    <Hourglass
+                      visible={true}
+                      height="30"
+                      width="30"
+                      ariaLabel="hourglass-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                      colors={["#050b14", "#72a1ed"]}
+                    />
+                  </div>
+                )}
+              </>
+            )}
           </form>
         </div>
       </div>
     </div>
   );
 };
+
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  name,
+  value,
+  onChange,
+  type = "text",
+  className = "",
+}) => (
+  <div className="mb-4">
+    <label className={`block mb-2 ${className}`}>{label}:</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      className={`w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 ${className}`}
+      required
+    />
+  </div>
+);
 
 export { EdityFormularyLocation };
