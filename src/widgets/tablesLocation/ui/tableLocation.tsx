@@ -20,6 +20,7 @@ interface AddressNew extends Address {
   lat: number;
   lng: number;
   listPerson: string[];
+  listCameras: string[];
 }
 
 const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonClick }) => {
@@ -50,6 +51,7 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
               lat: Number(resp.lat),
               lng: Number(resp.lng),
               listPerson: addr.listPerson || [],
+              listCameras: addr.listCameras || []
             };
           } catch (error) {
             console.error("Erro ao buscar CEP:", error);
@@ -67,6 +69,12 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
     localStorage.setItem('listPerson', JSON.stringify(listPerson));
     onButtonClick();
   };
+
+  const handleCameraClick = (listCameras: string[]) => {
+    localStorage.setItem('listCameras', JSON.stringify(listCameras));
+    onButtonClick();
+  };
+  
 
   return (
     <div className="items-center justify-center text-center">
@@ -137,6 +145,12 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
                       <ul className="flex justify-between">
                         <td>Funcionários: </td>
                         <button className="hover:underline" onClick={() => {handlePersonClick(addr.listPerson); onButtonClick()}}>
+                        <td>{addr.listPerson.length}</td>
+                        </button>
+                      </ul>
+                      <ul className="flex justify-between">
+                        <td>Cameras: </td>
+                        <button className="hover:underline" onClick={() => {handleCameraClick(addr.listCameras); onButtonClick()}}>
                         <td>{addr.listPerson.length}</td>
                         </button>
                       </ul>

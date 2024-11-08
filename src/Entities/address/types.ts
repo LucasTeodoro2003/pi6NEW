@@ -10,4 +10,5 @@ export interface Address {
   lat: number,
   lng: number,
   listPerson: string[];
+  listCameras: string[];
 }
