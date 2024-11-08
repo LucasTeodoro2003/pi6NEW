@@ -18,6 +18,7 @@ interface AddressNew extends Address {
   state: string;
   lat: number;
   lng: number;
+  listPerson: string[];
 }
 
 const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
@@ -48,6 +49,7 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
               state: resp.state,
               lat: Number(resp.lat),
               lng: Number(resp.lng),
+              listPerson: addr.listPerson || [],
             };
           } catch (error) {
             console.error("Erro ao buscar CEP:", error);
@@ -128,6 +130,10 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user }) => {
                       <ul className="flex justify-between">
                         <td>Encarregado: </td>
                         <td>{user?.name}</td>
+                      </ul>
+                      <ul className="flex justify-between">
+                        <td>Funcionários: </td>
+                        <td>{addr.listPerson.length}</td>
                       </ul>
                     </div>
                   </div>

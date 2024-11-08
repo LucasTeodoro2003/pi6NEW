@@ -9,4 +9,5 @@ export interface Address {
   city: string,
   lat: number,
   lng: number,
+  listPerson: string[];
 }
