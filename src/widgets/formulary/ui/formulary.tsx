@@ -254,7 +254,7 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         id="setor"
                         name="setor"
                         autoComplete="setor-name"
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm font-Jakarta dark:text-white"
+                        className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-blue-300 sm:text-sm font-Jakarta dark:text-white"
                         onChange={(e) => setLocalizacao(e.target.value)}
                       >
                         {user && user.email.length > 0 ? (
@@ -298,7 +298,7 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         name="cargo"
                         value={cargo}
                         onChange={(e) => setCargo(Number(e.target.value))}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm font-Jakarta dark:text-white"
+                        className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-blue-300 sm:text-sm font-Jakarta dark:text-white"
                       >
                         <option value={1}>Administrador</option>
                         <option value={2}>Gerente</option>

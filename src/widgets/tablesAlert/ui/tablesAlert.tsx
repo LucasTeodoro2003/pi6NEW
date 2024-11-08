@@ -26,7 +26,7 @@ const TablesAlert: React.FC<TablesAlertPromps> = ({ people }) => {
                 <h3 className="truncate text-sm font-medium text-gray-900 dark:text-white">
                   {person.name}
                 </h3>
-                <span
+                {/* <span
                   className={`inline-block flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
                     person.usingEpi
                       ? "bg-green-100 text-green-800"
@@ -34,11 +34,11 @@ const TablesAlert: React.FC<TablesAlertPromps> = ({ people }) => {
                   }`}
                 >
                   {person.usingEpi ? "Completa" : "Incompleta"}
-                </span>
+                </span> */}
               </div>
-              <p className="mt-1 truncate text-sm text-gray-500 dark:text-white">
+              {/* <p className="mt-1 truncate text-sm text-gray-500 dark:text-white">
                 {person.sector}
-              </p>
+              </p> */}
             </div>
             <img
               className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300 dark:bg-gray-900"
@@ -60,7 +60,7 @@ const TablesAlert: React.FC<TablesAlertPromps> = ({ people }) => {
                 />
               </button>
             </div>
-            <div
+            {/* <div
               className={`overflow-hidden transition-all duration-200 ease-in-out ${
                 showPersonId === person.id && person.details
                   ? "max-h-96"
@@ -78,7 +78,7 @@ const TablesAlert: React.FC<TablesAlertPromps> = ({ people }) => {
                   </ul>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </li>
       ))}

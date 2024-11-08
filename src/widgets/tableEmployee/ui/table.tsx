@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { api } from "../../../App/serviceApi";
 import { EmployeeRow, Person } from "../../../Entities/employee";
 
 interface TableProps {}
 
 const Table: React.FC<TableProps> = () => {
-  const navigate = useNavigate();
+  const [personList, setPersonList] = useState<Person[]>([]);
+
   const userFromLocalStorage = localStorage.getItem("user");
   const user = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : null;
   console.log(user);
@@ -22,8 +22,9 @@ const Table: React.FC<TableProps> = () => {
           "/PersonController/GetPerson?email=" + email
         );
         console.log(response.data.return);
+        setPersonList([response.data.return]);
       } catch (error) {
-        console.error("Pessoa não encontrada: ", error);
+        console.error("Erro ao buscar pessoas: ", error);
       }
     };
 
@@ -41,12 +42,6 @@ const Table: React.FC<TableProps> = () => {
         >
           Funcionarios
         </h3>
-        <button
-          onClick={() => navigate("/formulary")}
-          className="inline-flex items-center justify-center rounded-md border border-transparent px-4 py-2 text-sm font-semibold bg-primary  text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto font-Jakarta"
-        >
-          Adicionar Funcionário
-        </button>
       </div>
       <div className="px-2 py-5 sm:p-6">
         <div className="overflow-hidden shadow ring-1 ring-black dark:ring-white ring-opacity-5 dark:ring-opacity-5 md:rounded-lg">
@@ -62,12 +57,6 @@ const Table: React.FC<TableProps> = () => {
                   </th>
                   <th
                     scope="col"
-                    className="px-1 py-3.5 text-left text-sm font-semibold font-Jakarta text-gray-900 dark:text-white"
-                  >
-                    Departamento
-                  </th>
-                  <th
-                    scope="col"
                     className="px-6 py-3.5 text-center text-sm font-semibold font-Jakarta text-gray-900 dark:text-white"
                   >
                     Epi's Completas
@@ -75,9 +64,9 @@ const Table: React.FC<TableProps> = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                {/* {people.map((person) => (
-                  <EmployeeRow person={person} />
-                ))} */}
+              {personList.map((person) => (
+                  <EmployeeRow key={person.id} person={person} />
+                ))}
               </tbody>
             </table>
           </div>

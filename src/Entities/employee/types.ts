@@ -1,11 +1,9 @@
 export interface Person {
   id: number,
-  name: string;
-  sector: string;
-  department: string;
   email: string;
+  permissions: string[];
+  changedPassword: boolean;
+  name: string;
+  phone: string;
   image: string;
-  usingEpi: boolean;
-  details?: string[];
-  obs?: string;
 }
