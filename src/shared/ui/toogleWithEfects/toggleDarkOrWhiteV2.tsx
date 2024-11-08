@@ -5,9 +5,20 @@ function ToggleDarkorWhiteV2(){
   const [isDark, setIsDark] = useState(false);
 
   const toggleDarkMode = () => {
-    document.body.classList.toggle("dark");
-    setIsDark(document.body.classList.contains("dark"));
-  };
+  document.body.classList.toggle("dark");
+  setIsDark(document.body.classList.contains("dark"));
+  localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+};
+
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.body.classList.toggle("dark", savedTheme === "dark");
+      setIsDark(savedTheme === "dark");
+    }
+  }, []);
+  
 
   useEffect(() => {
     const currentTheme = document.body.classList.contains("dark");
