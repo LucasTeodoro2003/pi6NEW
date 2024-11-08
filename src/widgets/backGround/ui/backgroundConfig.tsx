@@ -28,7 +28,7 @@ const BackgroundConfig: React.FC<InicarCamera> = () => {
 
   return (
     <div className="flex h-[calc(100vh-98px)] ml-64">
-      <div className="bg-white dark:bg-gray-800 w-full h-full ">
+      <div className="bg-white dark:bg-gray-800 w-full h-max">
         <ConfigAccount />
         {mensage && (
           <div

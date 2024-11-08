@@ -38,7 +38,7 @@ function ConfigPage() {
   }
 
   return (
-    <main>
+    <main className="bg-white dark:bg-gray-800"> 
       <Header
         user={user}
         onCameraClick={() => {
