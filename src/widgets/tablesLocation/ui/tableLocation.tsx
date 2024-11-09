@@ -8,7 +8,7 @@ import { GoogleMaps } from "../../../shared/ui";
 interface TableLocationProps {
   address: Address[];
   user: User | null;
-  onButtonClick: () => void;
+  onButtonClick: (name:string) => void;
 }
 
 interface AddressNew extends Address {
@@ -67,12 +67,12 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
 
   const handlePersonClick = (listPerson: string[]) => {
     localStorage.setItem('listPerson', JSON.stringify(listPerson));
-    onButtonClick();
+    onButtonClick("person");
   };
 
   const handleCameraClick = (listCameras: string[]) => {
     localStorage.setItem('listCameras', JSON.stringify(listCameras));
-    onButtonClick();
+    onButtonClick("cam");
   };
   
 
@@ -144,14 +144,14 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
                       </ul>
                       <ul className="flex justify-between">
                         <td>Funcionários: </td>
-                        <button className="hover:underline" onClick={() => {handlePersonClick(addr.listPerson); onButtonClick()}}>
+                        <button className="hover:underline" onClick={() => {handlePersonClick(addr.listPerson); onButtonClick("person")}}>
                         <td>{addr.listPerson.length}</td>
                         </button>
                       </ul>
                       <ul className="flex justify-between">
                         <td>Cameras: </td>
-                        <button className="hover:underline" onClick={() => {handleCameraClick(addr.listCameras); onButtonClick()}}>
-                        <td>{addr.listPerson.length}</td>
+                        <button className="hover:underline" onClick={() => {handleCameraClick(addr.listCameras); onButtonClick("cam")}}>
+                        <td>{addr.listCameras.length}</td>
                         </button>
                       </ul>
                     </div>
