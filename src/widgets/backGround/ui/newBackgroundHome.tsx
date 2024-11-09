@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Address } from "../../../Entities/address";
 import { User } from "../../../Entities/users";
+import { TableCam } from "../../tableCam";
 import { Table } from "../../tableEmployee";
 import { TableLocation } from "../../tablesLocation";
 interface NewBackgroundHomeProps {
@@ -47,7 +48,7 @@ const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
               <TableLocation address={address} user={user} onButtonClick={(name) => setButtonOn(name)} />
             )}
             {buttonOn === "cam" && (
-              <></>
+              <TableCam />
             )}
           </div>
         </div>
