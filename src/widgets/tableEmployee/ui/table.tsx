@@ -18,20 +18,23 @@ const Table: React.FC<TableProps> = () => {
   useEffect(() => {
     const fetchPerson = async () => {
       try {
-        const response = await api.get(
-          "/PersonController/GetPerson?email=" + email
+        const responses = await Promise.all(
+          listPerson.map(async (email:any) => {
+            const response = await api.get("/PersonController/GetPerson?email=" + email);
+            return response.data.return;
+          })
         );
-        console.log(response.data.return);
-        setPersonList([response.data.return]);
+        setPersonList(responses);
       } catch (error) {
         console.error("Erro ao buscar pessoas: ", error);
       }
     };
-
-    if (email) {
+  
+    if (listPerson.length > 0) {
       fetchPerson();
     }
-  }, [email]);
+  }, [listPerson]);
+  
 
   return (
     <div className="ml-6 w-full divide-y divide-gray-200 dark:divide-slate-700 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-600 shadow">
