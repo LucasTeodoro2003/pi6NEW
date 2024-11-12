@@ -17,15 +17,25 @@ function NewHomePage() {
   const cep = require('awesome-cep');
 
   useEffect(() => {
-    api.get("/PersonController/GetPerson?email=" + id)
-      .then((response) => {
-        const fetchedUser = response.data.return;
-        setUser(fetchedUser);
-      })
-      .catch((err) => {
-        console.error("Aconteceu um erro: " + err);
-      });
-  }, [id]);
+    if (isLoggedIn && id) {
+      api.get("/PersonController/GetPerson?email=" + id)
+        .then((response) => {
+          const fetchedUser = response.data.return;
+          setUser(fetchedUser);
+        })
+        .catch((err) => {
+          console.error("Aconteceu um erro: " + err);
+        });
+    }
+  }, [id, isLoggedIn]);
+  console.log(user)
+
+  // useEffect(() => {
+  //   if (user) {
+  //     localStorage.setItem("user", JSON.stringify(user));
+  //   }
+  // }, [user]);
+  // console.log(JSON.parse(localStorage.getItem("user") || ""))
 
   const searchRole = user?.permissions[0].role;
 

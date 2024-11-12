@@ -28,13 +28,6 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
   const cep = require("awesome-cep");
   const navigate = useNavigate();
 
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const currentTheme = document.body.classList.contains("dark");
-    setIsDark(currentTheme);
-  }, []);
-
   useEffect(() => {
     const fetchAddressDetails = async () => {
       const updatedAddresses = await Promise.all(
@@ -122,7 +115,6 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
                           <GoogleMaps
                             lat={addr.lat}
                             lng={addr.lng}
-                            isDarkMode={isDark}
                           />
                         ) : (
                           <p>Localização não disponível</p>
