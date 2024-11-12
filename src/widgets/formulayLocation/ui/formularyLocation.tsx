@@ -81,7 +81,7 @@ const FormularyLocation = () => {
                 Nome do Local:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-white"
                 type="text"
                 id="name"
                 name="name"
@@ -95,7 +95,7 @@ const FormularyLocation = () => {
                 CEP:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-white"
                 type="text"
                 id="cep"
                 name="cep"
@@ -110,7 +110,7 @@ const FormularyLocation = () => {
                 Endereço:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-white"
                 type="text"
                 id="address"
                 name="address"
@@ -124,7 +124,7 @@ const FormularyLocation = () => {
                 Cidade:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-white"
                 type="text"
                 id="city"
                 name="city"
@@ -138,7 +138,7 @@ const FormularyLocation = () => {
                 Estado:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-white"
                 type="text"
                 id="state"
                 name="state"
@@ -152,7 +152,7 @@ const FormularyLocation = () => {
                 Nº:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-white"
                 type="number"
                 id="number"
                 name="number"
@@ -166,7 +166,7 @@ const FormularyLocation = () => {
                 OUTRAS INFORMAÇÕES:
               </label>
               <input
-                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-white"
                 type="text"
                 id="aditionalInfo"
                 name="aditionalInfo"

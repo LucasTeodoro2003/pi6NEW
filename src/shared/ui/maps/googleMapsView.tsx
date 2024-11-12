@@ -19,7 +19,7 @@ const GoogleMaps: React.FC<GoogleMapsProps> = ({ lat, lng }) => {
 
     const toggleTheme = () => {
         const newTheme = isDarkMode ? 'light' : 'dark';
-        localStorage.setItem('theme', newTheme);
+        localStorage.setItem('themeGoogle', newTheme);
         setIsDarkMode(!isDarkMode);
     };
 

@@ -28,13 +28,12 @@ function NewHomePage() {
         });
     }
   }, [id, isLoggedIn]);
-  console.log(user)
 
-  // useEffect(() => {
-  //   if (user) {
-  //     localStorage.setItem("user", JSON.stringify(user));
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
   // console.log(JSON.parse(localStorage.getItem("user") || ""))
 
   const searchRole = user?.permissions[0].role;
@@ -54,7 +53,6 @@ function NewHomePage() {
                 const response = await api.get("/PersonController/GetLocationsByPerson?personId=" + user?.email);
                 const locations = response.data.return;
                 setAddressList(locations);
-                console.log("O bosta", setAddressList)
               } catch (error) {
                 console.error("Erro ao buscar localizações:", error);
                 return null;
@@ -72,7 +70,6 @@ function NewHomePage() {
   return (
     <main>
       <Header
-        user={user}
         onCameraClick={() => {
           setShow(true);
         }}
@@ -81,7 +78,7 @@ function NewHomePage() {
         address={addressList} user={user}
       />
       <CamNotFound show={show} setShowAlert={setShow} />
-      <Sidebar user={user} />
+      <Sidebar />
     </main>
   );
 }

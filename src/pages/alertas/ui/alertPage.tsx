@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../../App/authPages";
 import { api } from "../../../App/serviceApi";
 import { Person } from "../../../Entities/employee";
-import { User } from "../../../Entities/users";
 import { BackgroundAlert } from "../../../widgets/backGround";
 import { Header } from "../../../widgets/header";
 import { Sidebar } from "../../../widgets/SideBar";
@@ -15,20 +14,7 @@ function AlertPage() {
   const navigate = useNavigate();
 
   const [people, setPeople] = useState<Person[]>([]);
-  const [user, setUser] = useState<User | null>(null);
 
-
-
-  useEffect(() => {
-    api.get("/PersonController/GetPerson?email=" + id)
-      .then((response) => {
-        const fetchedUser = response.data.return;
-        setUser(fetchedUser);
-      })
-      .catch((err) => {
-        console.error("Aconteceu um erro: " + err);
-      });
-  }, [id]);
 
   useEffect(() => {
     api.get("/PersonController/GetAllPerson")
@@ -49,12 +35,11 @@ function AlertPage() {
   return (
     <main>
       <Header
-        user={user}
         onCameraClick={() => {
           navigate("/home?cameraID=1");
         }}
       />
-      <Sidebar user={user} />
+      <Sidebar/>
       <BackgroundAlert people={people} />
     </main>
   );

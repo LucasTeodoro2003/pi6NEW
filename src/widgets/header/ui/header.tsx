@@ -1,12 +1,12 @@
 import { CameraIcon } from "@heroicons/react/20/solid";
-import { User } from "../../../Entities/users";
 import { ToggleDarkorWhiteV2 } from "../../../shared/ui";
 interface ReceiveName {
   onCameraClick: () => void;
-  user: User | null;
 }
 
-const Header: React.FC<ReceiveName> = ({ user, onCameraClick }) => {
+const Header: React.FC<ReceiveName> = ({ onCameraClick }) => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+
   return (
     <>
       <div className="bg-white dark:bg-gray-800 pt-8 border-gray-200 dark:border-gray-900 border-b-2">

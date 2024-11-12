@@ -19,7 +19,7 @@ function HomePage() {
     { name: "Setor 01", href: "https://www.youtube.com/watch?v=DB68T2s7gfI&pp=ygUMZXJyb3Igc2NyZWVu", current: activeTab === 0 },
   ]);
   const [people, setPeople] = useState<Person[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+  const [, setUser] = useState<User | null>(null);
   const { isLoggedIn, id } = useAuth();
 
   useEffect(() => {
@@ -84,7 +84,6 @@ function HomePage() {
   return (
     <main>
       <Header
-        user={user}
         onCameraClick={() => {
           setShow(true);
           setVideosId(tabs[0].href);
@@ -98,7 +97,7 @@ function HomePage() {
         activeTab={activeTab}
       />
       <AlertSimple show={show} setShow={setShow} />
-      <Sidebar user={user} />
+      <Sidebar />
     </main>
   );
 }

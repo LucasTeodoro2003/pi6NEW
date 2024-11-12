@@ -9,7 +9,6 @@ import {
 } from '@heroicons/react/24/outline';
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { User } from '../../../Entities/users';
 
 interface NavigationItem {
   name: string;
@@ -18,7 +17,7 @@ interface NavigationItem {
 }
 
 interface HomePagePromps {
-  user: User | null;
+
 }
 
 const navigation: NavigationItem[] = [
@@ -36,12 +35,19 @@ function classNames(...classes: string[]) {
 
 
 
-const Sidebar: React.FC<HomePagePromps> = ({ user }) => {
+const Sidebar: React.FC<HomePagePromps> = () => {
   const location = useLocation();
   const navegationPages = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user") || "{}")
+
+  const firstName = user.name ? user.name.split(' ')[0] : '';
+
+
+  
   const deleteAll = () => {
     localStorage.removeItem('token');
     localStorage.removeItem("user")
+    localStorage.removeItem("listCameras")
     navegationPages("/Login");
   };
 
@@ -87,10 +93,10 @@ const Sidebar: React.FC<HomePagePromps> = ({ user }) => {
           <div className='flex justify-between items-center mt-2 ml-2 mr-2 rounded-md'>
             {user ? (
               <>
-                <button className="flex justify-between hover:underline hover:text-gray-500" onClick={() => navegationPages('/Config')}>
-                  <img className={"h-8 w-8 rounded-full" + (user.image ? "" : "dark:filter dark:invert")}  src={user.image? user.image : "usuario.png"} alt={`Foto do ${user.name}`} />
-                  <div className='ml-2 flex-auto font-Jakarta font-medium text-xl dark:text-white dark:hover:text-gray-400'>
-                    {user.name}
+                <button className="flex items-center justify-between hover:underline hover:text-gray-500" onClick={() => navegationPages("/Config")}>
+                  <img className={`h-8 w-8 rounded-full ${user.image ? "" : "dark:filter dark:invert"}`} src={user.image ? user.image : "usuario.png"} alt={`Foto do ${user.name}`}/>
+                  <div className="ml-2 flex flex-grow items-center font-Jakarta font-medium text-xl dark:text-white dark:hover:text-gray-400">
+                    {firstName}
                   </div>
                 </button>
                 <button className='mr-2 hover:border-2 hover:border-gray-100 rounded-full px-2 py-2' onClick={deleteAll}>

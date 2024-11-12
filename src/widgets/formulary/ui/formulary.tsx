@@ -25,13 +25,12 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
     e.preventDefault();
 
     try {
-      const response = await api.post("/PersonController/CreatePerson", {
+       await api.post("/PersonController/CreatePerson", {
         name,
         phone: sendPhone,
         email,
         permissions: [{ role: cargo, locationId: localizacao }],
       });
-      console.log(response.data);
       localStorage.setItem("showSuccessMessage", "true");
       window.location.reload();
     } catch (err) {
@@ -39,8 +38,6 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
     }
     setLoading(false);
   };
-
-  console.log(locations);
 
   const mask = useMask({
     mask: "(__) _ ____-____",

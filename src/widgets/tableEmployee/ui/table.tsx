@@ -7,13 +7,7 @@ interface TableProps {}
 const Table: React.FC<TableProps> = () => {
   const [personList, setPersonList] = useState<Person[]>([]);
 
-  const userFromLocalStorage = localStorage.getItem("user");
-  const user = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : null;
-  console.log(user);
-
   const listPerson = JSON.parse(localStorage.getItem("listPerson") || "[]");
-  const email = listPerson[0];
-  console.log(email);
 
   useEffect(() => {
     const fetchPerson = async () => {

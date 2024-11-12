@@ -38,12 +38,11 @@ function FormularyPage() {
   return (
     <main>
       <Header
-        user={user}
         onCameraClick={() => {
           navigate("/home?cameraID=1");
         }}
       />
-      <Sidebar user={user} />
+      <Sidebar/>
       <BackgroundFormulary user={user}/>
     </main>
   );
