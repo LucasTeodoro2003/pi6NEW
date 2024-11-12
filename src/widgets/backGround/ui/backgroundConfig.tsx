@@ -1,4 +1,6 @@
+import { ArrowUturnLeftIcon } from "@heroicons/react/20/solid";
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { SucessMensageLocation } from "../../../shared/ui/SucessMensage/SucessMensageLocation";
 import { ConfigAccount } from "../../configAccount";
 
@@ -7,6 +9,26 @@ interface InicarCamera {}
 const BackgroundConfig: React.FC<InicarCamera> = () => {
   const [mensage, setMensage] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
+  const [buttonOn, setButtonOn] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+
+  const toggleTableLocation = () => {
+    setButtonOn("");
+  };
+
+const handleButtonClick = () => {
+  if (location.pathname === "/login") {
+    localStorage.removeItem("token");
+    console.log("Usuário Deslogado.");
+  }
+  if (buttonOn === "") {
+    navigate(-1);
+  } else {
+    toggleTableLocation();
+  }
+};
 
   useEffect(() => {
     const showSuccessMessage = localStorage.getItem("showSuccessMessage");
@@ -29,6 +51,7 @@ const BackgroundConfig: React.FC<InicarCamera> = () => {
   return (
     <div className="flex h-[calc(100vh-98px)] ml-64">
       <div className="bg-white dark:bg-gray-800 w-full h-max">
+      <button className="dark:text-white mx-2 my-2" onClick={handleButtonClick}><ArrowUturnLeftIcon className="h-6 w-6" /></button>
         <ConfigAccount />
         {mensage && (
           <div
