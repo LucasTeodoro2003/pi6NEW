@@ -8,7 +8,7 @@ import { GoogleMaps } from "../../../shared/ui";
 interface TableLocationProps {
   address: Address[];
   user: User | null;
-  onButtonClick: (name:string) => void;
+  onButtonClick: (name: string) => void;
 }
 
 interface AddressNew extends Address {
@@ -23,7 +23,11 @@ interface AddressNew extends Address {
   listCameras: string[];
 }
 
-const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonClick }) => {
+const TableLocation: React.FC<TableLocationProps> = ({
+  address,
+  user,
+  onButtonClick,
+}) => {
   const [newAddress, setNewAddress] = useState<AddressNew[]>([]);
   const cep = require("awesome-cep");
   const navigate = useNavigate();
@@ -44,7 +48,7 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
               lat: Number(resp.lat),
               lng: Number(resp.lng),
               listPerson: addr.listPerson || [],
-              listCameras: addr.listCameras || []
+              listCameras: addr.listCameras || [],
             };
           } catch (error) {
             console.error("Erro ao buscar CEP:", error);
@@ -59,15 +63,14 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
   }, [address, cep]);
 
   const handlePersonClick = (listPerson: string[]) => {
-    localStorage.setItem('listPerson', JSON.stringify(listPerson));
+    localStorage.setItem("listPerson", JSON.stringify(listPerson));
     onButtonClick("person");
   };
 
   const handleCameraClick = (listCameras: string[]) => {
-    localStorage.setItem('listCameras', JSON.stringify(listCameras));
+    localStorage.setItem("listCameras", JSON.stringify(listCameras));
     onButtonClick("cam");
   };
-  
 
   return (
     <div className="items-center justify-center text-center">
@@ -79,7 +82,9 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
               <button
                 type="button"
                 className="mt-3 inline-flex items-center rounded-full border border-transparent bg-gray-300 dark:bg-gray-600 p-3 text-white shadow-sm hover:bg-gray-600 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-                onClick={() => navigate("/config", { state: { openForm: true } })}
+                onClick={() =>
+                  navigate("/config", { state: { openForm: true } })
+                }
               >
                 <PlusIcon className="h-6 w-6 " aria-hidden="true" />
               </button>
@@ -112,10 +117,7 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
                     <div className="flex items-center space-x-3 mt-2 justify-center">
                       <h3 className="items-center justify-center truncate text-sm font-medium text-gray-900 dark:text-white">
                         {isValidLatLng ? (
-                          <GoogleMaps
-                            lat={addr.lat}
-                            lng={addr.lng}
-                          />
+                          <GoogleMaps lat={addr.lat} lng={addr.lng} />
                         ) : (
                           <p>Localização não disponível</p>
                         )}
@@ -131,20 +133,37 @@ const TableLocation: React.FC<TableLocationProps> = ({ address, user, onButtonCl
                         <td>{addr.address_name}</td>
                       </ul>
                       <ul className="flex justify-between">
-                        <td>Encarregado: </td>
-                        <td>{user?.name}</td>
+                        <li className="flex-auto">
+                          <button
+                            className="hover:underline w-full flex justify-between"
+                            onClick={() => {
+                              handlePersonClick(addr.listPerson);
+                              onButtonClick("cam");
+                            }}
+                          >
+                            <span className="justify-start">Funcionários: </span>
+                            <span className="justify-end">
+                              {addr.listPerson.length}
+                            </span>
+                          </button>
+                        </li>
                       </ul>
+
                       <ul className="flex justify-between">
-                        <td>Funcionários: </td>
-                        <button className="hover:underline" onClick={() => {handlePersonClick(addr.listPerson); onButtonClick("person")}}>
-                        <td>{addr.listPerson.length}</td>
-                        </button>
-                      </ul>
-                      <ul className="flex justify-between">
-                        <td>Cameras: </td>
-                        <button className="hover:underline" onClick={() => {handleCameraClick(addr.listCameras); onButtonClick("cam")}}>
-                        <td>{addr.listCameras.length}</td>
-                        </button>
+                        <li className="flex-auto">
+                          <button
+                            className="hover:underline w-full flex justify-between"
+                            onClick={() => {
+                              handleCameraClick(addr.listCameras);
+                              onButtonClick("cam");
+                            }}
+                          >
+                            <span className="justify-start">Cameras: </span>
+                            <span className="justify-end">
+                              {addr.listCameras.length}
+                            </span>
+                          </button>
+                        </li>
                       </ul>
                     </div>
                   </div>
