@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router"; 
+import { useNavigate } from "react-router";
 import { api } from "../../../App/serviceApi";
 
 const FormularyLocation = () => {
@@ -13,9 +13,9 @@ const FormularyLocation = () => {
     cep: "",
     latitude: 0,
     longitude: 0,
-    aditionalInfo: ""
+    aditionalInfo: "",
   });
-  
+
   const [isFetching, setIsFetching] = useState(false);
   const navigate = useNavigate();
 
@@ -32,14 +32,16 @@ const FormularyLocation = () => {
       if (formData.cep.length === 8) {
         setIsFetching(true);
         try {
-          const resp = await axios.get(`https://cep.awesomeapi.com.br/json/${formData.cep}`);
-          const { address_name, city, lat, lng, } = resp.data;
+          const resp = await axios.get(
+            `https://cep.awesomeapi.com.br/json/${formData.cep}`
+          );
+          const { address_name, city, lat, lng, state } = resp.data;
 
           setFormData((prev) => ({
             ...prev,
             address: address_name,
             city,
-            state: "1",
+            state: state,
             latitude: Number(lat),
             longitude: Number(lng),
           }));
@@ -50,20 +52,46 @@ const FormularyLocation = () => {
         }
       }
     };
-
     fetchAddressDetails();
   }, [formData.cep]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await api.post("/LocationController/CreateLocation", {
+      await api.post("/LocationController/CreateLocation", {
         ...formData,
         number: Number(formData.number),
-        state: Number(formData.state),
+        state: {
+          AC: 1,
+          AL: 2,
+          AM: 3,
+          AP: 4,
+          BA: 5,
+          CE: 6,
+          DF: 7,
+          ES: 8,
+          GO: 9,
+          MA: 10,
+          MT: 11,
+          MS: 12,
+          MG: 13,
+          PA: 14,
+          PB: 15,
+          PE: 16,
+          PI: 17,
+          PR: 18,
+          RJ: 19,
+          RN: 20,
+          RO: 21,
+          RR: 22,
+          RS: 23,
+          SC: 24,
+          SE: 25,
+          SP: 26,
+          TO: 27,
+        }[formData.state.trim().toUpperCase().slice(0, 2)],
         aditionalInfo: formData.aditionalInfo,
       });
-      console.log(response.data);
       window.location.reload();
       navigate("/home");
     } catch (err) {
@@ -77,7 +105,10 @@ const FormularyLocation = () => {
         <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-6 w-96 items-baseline">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="name">
+              <label
+                className="block text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="name"
+              >
                 Nome do Local:
               </label>
               <input
@@ -91,7 +122,10 @@ const FormularyLocation = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="cep">
+              <label
+                className="block text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="cep"
+              >
                 CEP:
               </label>
               <input
@@ -101,12 +135,18 @@ const FormularyLocation = () => {
                 name="cep"
                 value={formData.cep}
                 onChange={handleChange}
+                maxLength={8}
                 required
               />
-              {isFetching && <p className="text-sm text-gray-500">Buscando endereço...</p>}
+              {isFetching && (
+                <p className="text-sm text-gray-500">Buscando endereço...</p>
+              )}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="address">
+              <label
+                className="block text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="address"
+              >
                 Endereço:
               </label>
               <input
@@ -120,7 +160,10 @@ const FormularyLocation = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="city">
+              <label
+                className="block text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="city"
+              >
                 Cidade:
               </label>
               <input
@@ -134,8 +177,11 @@ const FormularyLocation = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="state">
-                Estado:
+              <label
+                className="block text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="state"
+              >
+                Estado (Sigla):
               </label>
               <input
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:text-white"
@@ -148,7 +194,10 @@ const FormularyLocation = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="number">
+              <label
+                className="block text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="number"
+              >
                 Nº:
               </label>
               <input
@@ -162,7 +211,10 @@ const FormularyLocation = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="number">
+              <label
+                className="block text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="number"
+              >
                 OUTRAS INFORMAÇÕES:
               </label>
               <input
