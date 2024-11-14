@@ -7,7 +7,6 @@ interface TableCamProps { }
 const TableCam: React.FC<TableCamProps> = () => {
   const [camList, setCamList] = useState<Cam[]>([]);
   const listCam = JSON.parse(localStorage.getItem("listCameras") || "[]");
-  console.log(listCam);
 
   useEffect(() => {
     const fetchCams = async () => {

@@ -1,3 +1,4 @@
+import { ChevronDoubleDownIcon } from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -9,6 +10,7 @@ interface TableLocationProps {
   address: Address[];
   user: User | null;
   onButtonClick: (name: string) => void;
+  onDetailsClick: () => void;
 }
 
 interface AddressNew extends Address {
@@ -27,6 +29,7 @@ const TableLocation: React.FC<TableLocationProps> = ({
   address,
   user,
   onButtonClick,
+  onDetailsClick,
 }) => {
   const [newAddress, setNewAddress] = useState<AddressNew[]>([]);
   const cep = require("awesome-cep");
@@ -57,6 +60,7 @@ const TableLocation: React.FC<TableLocationProps> = ({
         })
       );
       setNewAddress(updatedAddresses);
+      localStorage.setItem("listLocations", JSON.stringify(updatedAddresses));
     };
 
     fetchAddressDetails();
@@ -71,6 +75,17 @@ const TableLocation: React.FC<TableLocationProps> = ({
     localStorage.setItem("listCameras", JSON.stringify(listCameras));
     onButtonClick("cam");
   };
+
+  const handleClick = (id: string) => {
+    localStorage.setItem("id", id);
+    console.log("BotaoCLicado: ", (localStorage.getItem("id")));
+  };
+  
+
+  // newAddress.map((addr) => {
+  //   console.log(addr.id);
+  //   return <></>;
+  // });
 
   return (
     <div className="items-center justify-center text-center">
@@ -107,13 +122,31 @@ const TableLocation: React.FC<TableLocationProps> = ({
               >
                 <div className="flex w-full items-center justify-between space-x-6 p-6">
                   <div className="flex-2 truncate">
-                    {isValidLatLng ? (
-                      <h3 className=" flex items-center justify-center dark:text-white">
-                        {addr.name}
-                      </h3>
-                    ) : (
-                      <></>
-                    )}
+                    <div className="flex justify-between dark:text-white">
+                      {isValidLatLng ? (
+                        <h3 className=" ml-10 flex items-center justify-center dark:text-white">
+                          {addr.name}
+                        </h3>
+                      ) : (
+                        <h2 className=" flex items-center justify-center dark:text-white text-xs">
+                          {addr.name} - Localização Não Disponivel
+                        </h2>
+                      )}
+                      <button
+                        type="button"
+                        className="mr-4 inline-flex items-center rounded-md border border-transparent bg-gray-100 dark:bg-gray-600 px-2 py-1 text-sm font-medium dark:text-white shadow-sm dark:hover:bg-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        onClick={() => {
+                          onDetailsClick();
+                          handleClick(addr.id)
+                        }}
+                      >
+                        Detalhes
+                        <ChevronDoubleDownIcon
+                          className={`ml-2 -mr-1 h-5 w-5 transition-transform duration-300`}
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
                     <div className="flex items-center space-x-3 mt-2 justify-center">
                       <h3 className="items-center justify-center truncate text-sm font-medium text-gray-900 dark:text-white">
                         {isValidLatLng ? (
@@ -141,7 +174,9 @@ const TableLocation: React.FC<TableLocationProps> = ({
                               onButtonClick("cam");
                             }}
                           >
-                            <span className="justify-start">Funcionários: </span>
+                            <span className="justify-start">
+                              Funcionários:{" "}
+                            </span>
                             <span className="justify-end">
                               {addr.listPerson.length}
                             </span>
