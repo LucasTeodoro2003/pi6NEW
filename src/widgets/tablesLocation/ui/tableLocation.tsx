@@ -115,7 +115,7 @@ const TableLocation: React.FC<TableLocationProps> = ({
                 type="button"
                 className="mt-3 inline-flex items-center rounded-full border border-transparent bg-gray-300 dark:bg-gray-600 p-3 text-white shadow-sm hover:bg-gray-600 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
                 onClick={() =>
-                  navigate("/config", { state: { openForm: true } })
+                  navigate("/config", { state: { showView: "CREATED" } })
                 }
               >
                 <PlusIcon className="h-6 w-6 " aria-hidden="true" />
@@ -135,31 +135,14 @@ const TableLocation: React.FC<TableLocationProps> = ({
             return (
               <li
                 key={addr.id}
-                className="col-span-1 h-fit divide-y divide-gray-200 rounded-lg bg-white dark:bg-gray-700 shadow"
+                className="col-span-1 h-fit divide-y divide-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 shadow"
               >
                 <div className="flex w-full items-center justify-between space-x-6 p-6">
                   <div className="flex-3 truncate dark:text-red-600">
                     <div className="flex justify-center">
                       <button
-                        className=""
-                        onClick={() => {
-                          navigate("/config", { state: { showView: "EDITY" } });
-                        }}
-                      >
-                        <PencilIcon className="w-5 h-5 hover:w-7 hover:h-7" />
-                      </button>
-
-                      <button
-                        className=""
-                        onClick={() => {
-                          deleteLocation(addr.id);
-                        }}
-                      >
-                        <TrashIcon className="w-5 h-5 hover:w-7 hover:h-7" />
-                      </button>
-                      <button
                         type="button"
-                        className="mr-4 inline-flex items-center rounded-md border border-transparent bg-gray-100 dark:bg-gray-600 px-2 py-1 text-sm font-medium dark:text-white shadow-sm dark:hover:bg-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        className="mr-4 inline-flex items-center rounded-md border border-transparent bg-gray-200 dark:bg-gray-600 px-2 py-1 text-sm font-medium text-gray-600 dark:text-white shadow-sm dark:hover:bg-gray-800 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                         onClick={() => {
                           onDetailsClick();
                           handleClick(addr.id);
@@ -170,6 +153,23 @@ const TableLocation: React.FC<TableLocationProps> = ({
                           className={`ml-2 -mr-1 h-5 w-5 transition-transform duration-300`}
                           aria-hidden="true"
                         />
+                      </button>
+                      <button
+                        className="dark:text-gray-400 text-gray-600"
+                        onClick={() => {
+                          navigate("/config", { state: { showView: "EDITY" } });
+                        }}
+                      >
+                        <PencilIcon className="w-5 h-5 hover:w-7 hover:h-7" />
+                      </button>
+
+                      <button
+                        className="text-red-400"
+                        onClick={() => {
+                          deleteLocation(addr.id);
+                        }}
+                      >
+                        <TrashIcon className="w-5 h-5 hover:w-7 hover:h-7" />
                       </button>
                     </div>
                     <div className="mt-1 flex justify-center dark:text-white">

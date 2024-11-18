@@ -47,41 +47,122 @@ const DetailsAlert: React.FC<DetailsAlertProps> = () => {
             >
               <div>
                 {dark === "dark" && locationDetails ? (
-                  <li className="col-span-1 h-fit divide-y divide-gray-200 rounded-lg bg-white dark:bg-gray-700 shadow">
-                    <div className="flex w-full items-center justify-between space-x-6 p-6">
-                      <div className="flex-2 truncate">
-                        <div className="flex items-center space-x-3 mt-2 justify-center">
-                          <h3 className="items-center justify-center truncate text-sm font-medium text-gray-900 dark:text-white">
-                            {locationDetails.name}
-                          </h3>
+                  <li className="col-span-1 h-fit divide-y divide-gray-200 rounded-lg bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 dark:text-white">
+                    Detalhes
+                    <div className="p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                        {locationDetails.name}
+                      </h3>
+
+                      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-500 dark:text-gray-300">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Endereço:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.address_name}
+                          </span>
                         </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="overflow-hidden transition-all duration-200 ease-in-out max-h-96">
-                        <div className="p-4 justify-between flex-2 dark:text-white">
-                          <ul className="flex justify-between">
-                            <li>
-                              <strong>Endereço:</strong> {locationDetails.address_name}
-                            </li>
-                            <li>
-                              <strong>Cidade:</strong> {locationDetails.city}
-                            </li>
-                            <li>
-                              <strong>Estado:</strong> {locationDetails.state}
-                            </li>
-                            <li>
-                              <strong>CEP:</strong> {locationDetails.cep}
-                            </li>
-                          </ul>
+
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Cidade:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.city}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Estado:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.state}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            CEP:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.cep}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Informações Adicionais:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.aditionalInfo}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Numero:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.number}
+                          </span>
                         </div>
                       </div>
                     </div>
                   </li>
                 ) : (
-                  <div className="text-white">Carregando...</div>
+                  <></>
                 )}
-                {dark === "light" && <div>Lucas Light</div>}
+                {dark === "light" && locationDetails ? (
+                  <li className="col-span-1 h-fit divide-y divide-gray-200 rounded-lg bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
+                    Detalhes
+                    <div className="p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                        {locationDetails.name}
+                      </h3>
+
+                      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-500 dark:text-gray-300">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Endereço:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.address_name}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Cidade:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.city}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            Estado:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.state}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            CEP:
+                          </span>
+                          <span className="text-gray-800 dark:text-gray-100">
+                            {locationDetails.cep}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                ) : (
+                  <></>
+                )}
               </div>
             </Transition.Child>
           </div>

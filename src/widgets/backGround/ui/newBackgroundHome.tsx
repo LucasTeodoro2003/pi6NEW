@@ -1,4 +1,4 @@
-import { ArrowUturnLeftIcon } from "@heroicons/react/20/solid";
+import { ArrowUturnLeftIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Popup from "reactjs-popup";
@@ -49,22 +49,43 @@ const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
   return (
     <div className="flex h-screen ml-64">
       <div className="bg-white dark:bg-gray-800 w-full h-full">
-        <button
-          className="dark:text-white mx-2 my-2"
-          onClick={handleButtonClick}
-        >
-          <ArrowUturnLeftIcon className="h-6 w-6" />
-        </button>
+        <div className="flex justify-between">
+          <button
+            className="dark:text-white mx-2 my-2"
+            onClick={handleButtonClick}
+          >
+            <ArrowUturnLeftIcon className="h-6 w-6" />
+          </button>
+          <button
+            className="dark:text-white mx-2 my-2 flex items-center"
+            onClick={() => {navigate("/config", { state: { showView: "CREATED" }})}}
+          >
+            <div className="flex items-center">
+              Criar Localização
+              <PlusCircleIcon className="h-6 w-6 ml-2" />{" "}
+            </div>
+          </button>
+        </div>
+
         <div className="flex mt-5 bg-white dark:bg-gray-800">
           <div className="flex text-justify w-full justify-center items-center">
             {buttonOn === "person" && <Table />}
             {buttonOn === "" && (
-              <TableLocation address={address} user={user} onButtonClick={(name) => setButtonOn(name)} onDetailsClick={openDetailsPopup}/>
+              <TableLocation
+                address={address}
+                user={user}
+                onButtonClick={(name) => setButtonOn(name)}
+                onDetailsClick={openDetailsPopup}
+              />
             )}
             {buttonOn === "cam" && <TableCam />}
           </div>
         </div>
-        <Popup open={isDetailsPopupOpen} onClose={closeDetailsPopup} position="center center">
+        <Popup
+          open={isDetailsPopupOpen}
+          onClose={closeDetailsPopup}
+          position="center center"
+        >
           <DetailsAlert />
         </Popup>
       </div>

@@ -92,7 +92,6 @@ const FormularyLocation = () => {
         }[formData.state.trim().toUpperCase().slice(0, 2)],
         aditionalInfo: formData.aditionalInfo,
       });
-      window.location.reload();
       navigate("/home");
     } catch (err) {
       console.error("Erro ao enviar o formulário:", err);
