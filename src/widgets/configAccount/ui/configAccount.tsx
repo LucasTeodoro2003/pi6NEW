@@ -1,11 +1,12 @@
-import { useState } from "react";
 import { DropConfig } from "../../dropConfig";
 import { EdityFormularyLocation, FormularyLocation } from "../../formulayLocation";
 
+interface ConfigAccountProps {
+  showView: string;
+  setShowView: (view: string) => void;
+}
 
-const ConfigAccount: React.FC = () => {
-  const [showView, setShowView] = useState("")
-
+const ConfigAccount: React.FC<ConfigAccountProps> = ({showView, setShowView}) => {
   return (
     <div className="flex justify-start ml-6 items-start mt-6 h-auto">
       <div className="divide-y divide-gray-200 rounded-lg bg-gray-100 dark:bg-gray-600 shadow justify-start">

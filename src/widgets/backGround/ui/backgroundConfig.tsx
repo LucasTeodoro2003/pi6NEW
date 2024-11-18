@@ -4,9 +4,12 @@ import { useLocation, useNavigate } from "react-router";
 import { SucessMensageLocation } from "../../../shared/ui/SucessMensage/SucessMensageLocation";
 import { ConfigAccount } from "../../configAccount";
 
-interface InicarCamera {}
+interface BackgroundConfigProps {
+  showView: string;
+  setShowView: (view: string) => void;
+}
 
-const BackgroundConfig: React.FC<InicarCamera> = () => {
+const BackgroundConfig: React.FC<BackgroundConfigProps> = ({showView, setShowView}) => {
   const [mensage, setMensage] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [buttonOn, setButtonOn] = useState("");
@@ -52,7 +55,7 @@ const handleButtonClick = () => {
     <div className="flex h-[calc(100vh-98px)] ml-64">
       <div className="bg-white dark:bg-gray-800 w-full h-max">
       <button className="dark:text-white mx-2 my-2" onClick={handleButtonClick}><ArrowUturnLeftIcon className="h-6 w-6" /></button>
-        <ConfigAccount />
+        <ConfigAccount showView={showView} setShowView={setShowView}/>
         {mensage && (
           <div
             className={`transition-opacity duration-1000 ${

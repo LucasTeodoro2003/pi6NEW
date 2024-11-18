@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../../App/authPages";
 import { BackgroundConfig } from "../../../widgets/backGround";
 import { Header } from "../../../widgets/header";
@@ -8,7 +9,8 @@ import { NotFoundPage } from "../../notFound";
 function ConfigPage() {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
-
+  const location = useLocation();
+  const [showView, setShowView] = useState(location.state?.showView || "");
 
 
   // const userFromLocalStorage = localStorage.getItem("user");
@@ -30,7 +32,7 @@ function ConfigPage() {
         }}
       />
       <Sidebar />
-      <BackgroundConfig />
+      <BackgroundConfig showView={showView} setShowView={setShowView}/>
     </main>
   );
 }

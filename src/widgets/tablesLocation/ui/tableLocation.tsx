@@ -1,7 +1,12 @@
-import { ChevronDoubleDownIcon } from "@heroicons/react/20/solid";
+import {
+  ChevronDoubleDownIcon,
+  PencilIcon,
+  TrashIcon,
+} from "@heroicons/react/20/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { api } from "../../../App/serviceApi";
 import { Address } from "../../../Entities/address";
 import { User } from "../../../Entities/users";
 import { GoogleMaps } from "../../../shared/ui";
@@ -76,11 +81,23 @@ const TableLocation: React.FC<TableLocationProps> = ({
     onButtonClick("cam");
   };
 
+  const deleteLocation = async (id: string) => {
+    try {
+      const response = await api.delete(
+        "/LocationController/DeleteLocation?id=" + id
+      );
+      console.log(response.data.return);
+      console.log("Deletando: ", id);
+    } catch (error) {
+      console.error("Error ao deletar Localização:", error);
+    }
+    window.location.reload();
+  };
+
   const handleClick = (id: string) => {
     localStorage.setItem("id", id);
-    console.log("BotaoCLicado: ", (localStorage.getItem("id")));
+    console.log("BotaoCLicado: ", localStorage.getItem("id"));
   };
-  
 
   // newAddress.map((addr) => {
   //   console.log(addr.id);
@@ -121,23 +138,31 @@ const TableLocation: React.FC<TableLocationProps> = ({
                 className="col-span-1 h-fit divide-y divide-gray-200 rounded-lg bg-white dark:bg-gray-700 shadow"
               >
                 <div className="flex w-full items-center justify-between space-x-6 p-6">
-                  <div className="flex-2 truncate">
-                    <div className="flex justify-between dark:text-white">
-                      {isValidLatLng ? (
-                        <h3 className=" ml-10 flex items-center justify-center dark:text-white">
-                          {addr.name}
-                        </h3>
-                      ) : (
-                        <h2 className=" flex items-center justify-center dark:text-white text-xs">
-                          {addr.name} - Localização Não Disponivel
-                        </h2>
-                      )}
+                  <div className="flex-3 truncate dark:text-red-600">
+                    <div className="flex justify-center">
+                      <button
+                        className=""
+                        onClick={() => {
+                          navigate("/config", { state: { showView: "EDITY" } });
+                        }}
+                      >
+                        <PencilIcon className="w-5 h-5 hover:w-7 hover:h-7" />
+                      </button>
+
+                      <button
+                        className=""
+                        onClick={() => {
+                          deleteLocation(addr.id);
+                        }}
+                      >
+                        <TrashIcon className="w-5 h-5 hover:w-7 hover:h-7" />
+                      </button>
                       <button
                         type="button"
                         className="mr-4 inline-flex items-center rounded-md border border-transparent bg-gray-100 dark:bg-gray-600 px-2 py-1 text-sm font-medium dark:text-white shadow-sm dark:hover:bg-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                         onClick={() => {
                           onDetailsClick();
-                          handleClick(addr.id)
+                          handleClick(addr.id);
                         }}
                       >
                         Detalhes
@@ -146,6 +171,17 @@ const TableLocation: React.FC<TableLocationProps> = ({
                           aria-hidden="true"
                         />
                       </button>
+                    </div>
+                    <div className="mt-1 flex justify-center dark:text-white">
+                      {isValidLatLng ? (
+                        <h3 className="flex items-center justify-center dark:text-white">
+                          {addr.name}
+                        </h3>
+                      ) : (
+                        <h2 className="flex items-center justify-center dark:text-white text-xs">
+                          {addr.name} - Localização Não Disponivel
+                        </h2>
+                      )}
                     </div>
                     <div className="flex items-center space-x-3 mt-2 justify-center">
                       <h3 className="items-center justify-center truncate text-sm font-medium text-gray-900 dark:text-white">
@@ -171,7 +207,7 @@ const TableLocation: React.FC<TableLocationProps> = ({
                             className="hover:underline w-full flex justify-between"
                             onClick={() => {
                               handlePersonClick(addr.listPerson);
-                              onButtonClick("cam");
+                              onButtonClick("person");
                             }}
                           >
                             <span className="justify-start">
