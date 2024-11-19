@@ -25,7 +25,7 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
     e.preventDefault();
 
     try {
-       await api.post("/PersonController/CreatePerson", {
+      await api.post("/PersonController/CreatePerson", {
         name,
         phone: sendPhone,
         email,
@@ -220,6 +220,7 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         autoComplete="given-name"
                         className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 dark:shadow-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
                         onChange={(e) => setName(e.target.value)}
+                        required
                       />
                     </div>
 
@@ -237,6 +238,7 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         autoComplete="email"
                         className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 shadow-sm dark:shadow-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
                         onChange={(e) => setEmail(e.target.value)}
+                        required
                       />
                     </div>
 
@@ -253,9 +255,13 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         autoComplete="setor-name"
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-blue-300 sm:text-sm font-Jakarta dark:text-white"
                         onChange={(e) => setLocalizacao(e.target.value)}
+                        value={localizacao || ""}
+                        required
                       >
+                        <option value="">Selecione uma Localização</option>
+                        <option value="">Todas as Localizações (Apenas para Administrador)</option>
                         {user && user.email.length > 0 ? (
-                          locations.map((location: any, index) => (
+                          locations.map((location: any) => (
                             <option key={location.id} value={location.id}>
                               {location.name}
                             </option>
@@ -265,7 +271,6 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         )}
                       </select>
                     </div>
-
                     <div className="col-span-6 sm:col-span-3">
                       <label
                         htmlFor="phone"
@@ -281,6 +286,7 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         autoComplete="phone"
                         className="bg-gray-100 mt-1 block h-9 w-full rounded-md dark:bg-gray-700 border-gray-300 border-2 shadow-sm dark:shadow-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:text-white"
                         onChange={(e) => setPhone(e.target.value)}
+                        required
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -296,6 +302,7 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         value={cargo}
                         onChange={(e) => setCargo(Number(e.target.value))}
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-100 dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-blue-300 focus:outline-none focus:ring-blue-300 sm:text-sm font-Jakarta dark:text-white"
+                        required
                       >
                         <option value={1}>Administrador</option>
                         <option value={2}>Gerente</option>

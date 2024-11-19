@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import { api } from "../../../App/serviceApi";
 import { EmployeeRow, Person } from "../../../Entities/employee";
 
@@ -6,6 +7,7 @@ interface TableProps {}
 
 const Table: React.FC<TableProps> = () => {
   const [personList, setPersonList] = useState<Person[]>([]);
+  const location = useLocation();
 
   const listPerson = JSON.parse(localStorage.getItem("listPerson") || "[]");
 
@@ -13,8 +15,10 @@ const Table: React.FC<TableProps> = () => {
     const fetchPerson = async () => {
       try {
         const responses = await Promise.all(
-          listPerson.map(async (email:any) => {
-            const response = await api.get("/PersonController/GetPerson?email=" + email);
+          listPerson.map(async (email: any) => {
+            const response = await api.get(
+              "/PersonController/GetPerson?email=" + email
+            );
             return response.data.return;
           })
         );
@@ -23,12 +27,17 @@ const Table: React.FC<TableProps> = () => {
         console.error("Erro ao buscar pessoas: ", error);
       }
     };
-  
+
     if (listPerson.length > 0) {
       fetchPerson();
     }
-  }, [listPerson]);
-  
+  }, [listPerson, location]);
+
+  const handleDeletePerson = (email: string) => {
+    setPersonList((prevList) =>
+      prevList.filter((person) => person.email !== email)
+    );
+  };
 
   return (
     <div className="ml-6 w-full divide-y divide-gray-200 dark:divide-slate-700 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-600 shadow">
@@ -58,11 +67,21 @@ const Table: React.FC<TableProps> = () => {
                   >
                     Numero de Telefone
                   </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3.5 text-center text-sm font-semibold font-Jakarta text-gray-900 dark:text-white"
+                  >
+                    Ações
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
-              {personList.map((person) => (
-                  <EmployeeRow key={person.id} person={person} />
+                {personList.map((person) => (
+                  <EmployeeRow
+                    key={person.id}
+                    person={person}
+                    onDelete={handleDeletePerson}
+                  />
                 ))}
               </tbody>
             </table>

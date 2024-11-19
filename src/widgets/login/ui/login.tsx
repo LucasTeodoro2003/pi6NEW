@@ -14,8 +14,8 @@ function Login() {
   useEffect(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    localStorage.removeItem("listPerson")
-    localStorage.removeItem("listCameras")
+    localStorage.removeItem("listPerson");
+    localStorage.removeItem("listCameras");
   }, []);
 
   const verifyButton = async (e: FormEvent<HTMLFormElement>) => {
@@ -29,10 +29,26 @@ function Login() {
 
       localStorage.setItem("token", token);
 
-      navigate("/home");
+      try {
+        const personResponse = await api.get(
+          `/PersonController/GetPerson?email=${email}`
+        );
+        const changedPassword = personResponse.data.return.changedPassword;
+        console.log(changedPassword);
+
+        if (changedPassword === true) {
+          navigate("/home");
+        } else {
+          localStorage.setItem("email", email)
+          navigate("/password");
+        }
+      } catch (err) {
+        setError("Nenhum email encontrado, Procure o Suporte");
+      }
     } catch (err) {
       setError("Email ou senha incorretos!");
     }
+
     setLoading(false);
   };
 
@@ -99,17 +115,21 @@ function Login() {
           </button>
         </form>
       </div>
-      {loading && <>
-        <div className="mt-4 flex justify-center w-full">
-        <Hourglass visible={true}
-          height="50"
-          width="50"
-          ariaLabel="hourglass-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          colors={['#050b14', '#72a1ed']} />
-      </div>
-      </>}
+      {loading && (
+        <>
+          <div className="mt-4 flex justify-center w-full">
+            <Hourglass
+              visible={true}
+              height="50"
+              width="50"
+              ariaLabel="hourglass-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              colors={["#050b14", "#72a1ed"]}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
