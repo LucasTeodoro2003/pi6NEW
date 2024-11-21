@@ -1,41 +1,37 @@
 import React, { useEffect, useState } from "react";
-import Select from 'react-select'
+import { FaUser, FaUserTie } from "react-icons/fa";
+import Select from "react-select";
 import { api } from "../../../App/serviceApi";
 import { Person } from "../../../Entities/employee";
 
-
-interface TableProps { }
+interface TableProps {}
 
 const Table: React.FC<TableProps> = () => {
   const [personList, setPersonList] = useState<Person[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const locationId = localStorage.getItem("locationId");
   const [listPerson] = useState(JSON.parse(localStorage.getItem("listPerson") || "[]"));
-  const [managers, setManagers] = useState<string[]>([])
-
-  const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const [managers, setManagers] = useState<string[]>([]);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const searchRole = user?.permissions[0].role;
 
   useEffect(() => {
     const fetchAddressDetails = async () => {
-      if (searchRole === 1) {
-        try {
-          const response = await api.get("/PersonController/GetAllPerson");
-          const peopleLocations = response.data.return;
-          setPeople(peopleLocations);
-        } catch (error) {
-          console.error("Erro ao buscar Pessoas:", error);
-          return null;
+      try {
+        const response = await api.get("/PersonController/GetAllPerson");
+        let peopleLocations = response.data.return;
+
+        if (searchRole === 2) {
+          peopleLocations = peopleLocations.filter((person: Person) =>
+            person.permissions.some(
+              (permission) => permission.role === 2 || permission.role === 3
+            )
+          );
         }
-      } else if (searchRole === 2) {
-        try {
-          const response = await api.get("/PersonController/GetAllPerson");
-          const peopleLocations = response.data.return;
-          setPeople(peopleLocations);
-        } catch (error) {
-          console.error("Erro ao buscar Pessoas:", error);
-          return null;
-        }
+        setPeople(peopleLocations);
+      } catch (error) {
+        console.error("Erro ao buscar Pessoas:", error);
+        return null;
       }
     };
     fetchAddressDetails();
@@ -67,39 +63,87 @@ const Table: React.FC<TableProps> = () => {
     const updatePermissions = async (personList: Person[]) => {
       try {
         await api.put(
-          "/LocationCOntroller/UpdatePermissionsByLocation?locationId=" + locationId, personList.map((person) => ({ personId: person.id, role: managers.includes(person.email) ? 2 : 3 }))
+          "/LocationController/UpdatePermissionsByLocation?locationId=" +
+            locationId,
+          personList.map((person) => ({
+            personId: person.id,
+            role: managers.includes(person.email) ? 2 : 3,
+          }))
         );
       } catch (error) {
         console.error("Erro ao salvar permissões: ", error);
       }
-    }
+    };
     updatePermissions(personList);
-  }, [personList, managers, locationId])
+  }, [personList, managers, locationId]);
 
   return (
     <div className="ml-6 w-full divide-y divide-gray-200 dark:divide-slate-700 overflow-visible rounded-lg bg-gray-100 dark:bg-gray-600 shadow">
       <div className="flex justify-between items-center px-2 py-5 sm:px-6">
-        <h3
-          className="text-lg font-semibold font-Jakarta leading-6 text-gray-900 dark:text-white
-        "
-        >
-          Funcionarios
+        <h3 className="text-lg font-semibold font-Jakarta leading-6 text-gray-900 dark:text-white">
+          Funcionários
         </h3>
       </div>
       <div className="px-2 py-5 sm:p-6">
-        <Select isMulti options={people} value={personList} onChange={(value) => setPersonList(value as Person[])} getOptionLabel={(option) => option.name} getOptionValue={(option) => option.email} />
+        <Select
+          isMulti
+          options={people}
+          value={personList}
+          onChange={(value) => setPersonList(value as Person[])}
+          getOptionLabel={(option) => option.name}
+          getOptionValue={(option) => option.email}
+        />
       </div>
       <div className="px-2 py-5 sm:p-6">
-        <div className="dark:text-white">
-          {
-            personList.map(person => (
-              <div key={person.email} className="flex gap-3">
-                <span>{person.name}</span>
-                <button onClick={() => setManagers(managers => ([...managers, person.email]))} className={managers.includes(person.email) ? "font-bold underline text-gray-100 font-Jakarta" : ""}>Gerente</button>
-                <button onClick={() => setManagers(managers => managers.filter(manager => manager !== person.email))} className={managers.includes(person.email) ? "" : "font-bold underline text-gray-100 font-Jakarta"}>Trabalhador</button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 dark:text-white">
+          {personList.map((person) => (
+            <div
+              key={person.email}
+              className="p-3 border rounded-lg shadow-sm flex items-center justify-between bg-white dark:bg-gray-700"
+            >
+              <div className="flex items-center gap-2">
+                {managers.includes(person.email) ? (
+                  <FaUserTie className="text-blue-500 text-xl" />
+                ) : (
+                  <FaUser className="text-gray-500 text-xl" />
+                )}
+                <div className="flex flex-col">
+                  <span className="font-medium">{person.name}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-300">
+                    {person.email}
+                  </span>
+                </div>
               </div>
-            ))
-          }
+              <div className="flex gap-2">
+                <button
+                  onClick={() =>
+                    setManagers((managers) => [...managers, person.email])
+                  }
+                  className={`py-1 px-2 rounded text-xs ${
+                    managers.includes(person.email)
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 dark:bg-gray-500 text-gray-700"
+                  }`}
+                >
+                  Gerente
+                </button>
+                <button
+                  onClick={() =>
+                    setManagers((managers) =>
+                      managers.filter((manager) => manager !== person.email)
+                    )
+                  }
+                  className={`py-1 px-2 rounded text-xs ${
+                    managers.includes(person.email)
+                      ? "bg-gray-200 dark:bg-gray-500 text-gray-700"
+                      : "bg-blue-500 text-white"
+                  }`}
+                >
+                  Trabalhador
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

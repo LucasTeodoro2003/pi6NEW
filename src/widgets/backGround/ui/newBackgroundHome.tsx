@@ -10,7 +10,6 @@ import { DetailsAlert } from "../../detailsLocation";
 import { TableCam } from "../../tableCam";
 import { Table } from "../../tableLocationEmployee";
 import { TableLocation } from "../../tablesLocation";
-const cep = require('awesome-cep');
 
 interface NewBackgroundHomeProps {
   user: User | null;
@@ -52,7 +51,7 @@ const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
       }
     };
     fetchAddressDetails();
-  }, [user, cep, id, searchRole, buttonOn]);
+  }, [user, id, searchRole, buttonOn]);
 
 
 
