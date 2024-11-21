@@ -34,7 +34,7 @@ const handleButtonClick = () => {
     <div className="flex h-screen ml-64">
       <div className="bg-white dark:bg-gray-800 w-full h-full ">
       <button className="dark:text-white mx-2 my-2" onClick={handleButtonClick}><ArrowUturnLeftIcon className="h-6 w-6" /></button>
-        <TablesAlert people={people} />
+        <TablesAlert />
         <div className="flex mt-5 mx-5 bg-white dark:bg-gray-800">
           <div className="flex text-justify w-screen"></div>
         </div>
