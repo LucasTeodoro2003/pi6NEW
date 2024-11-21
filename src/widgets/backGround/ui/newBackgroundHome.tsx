@@ -1,26 +1,60 @@
 import { ArrowUturnLeftIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Popup from "reactjs-popup";
+import { useAuth } from "../../../App/authPages";
+import { api } from "../../../App/serviceApi";
 import { Address } from "../../../Entities/address";
 import { User } from "../../../Entities/users";
 import { DetailsAlert } from "../../detailsLocation";
 import { TableCam } from "../../tableCam";
-import { Table } from "../../tableEmployee";
+import { Table } from "../../tableLocationEmployee";
 import { TableLocation } from "../../tablesLocation";
+const cep = require('awesome-cep');
+
 interface NewBackgroundHomeProps {
-  address: Address[];
   user: User | null;
 }
 
 const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
-  address,
   user,
 }) => {
+  const { id } = useAuth();
+
+  const [address, setAddressList] = useState<Address[]>([]);
   const [isDetailsPopupOpen, setIsDetailsPopupOpen] = useState(false);
   const [buttonOn, setButtonOn] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+
+  const searchRole = user?.permissions[0].role;
+
+  useEffect(() => {
+    const fetchAddressDetails = async () => {
+      if (searchRole === 1) {
+        try {
+          const response = await api.get("/LocationController/GetAllLocation");
+          const locations = response.data.return;
+          setAddressList(locations);
+        } catch (error) {
+          console.error("Erro ao buscar localizações:", error);
+          return null;
+        }
+      } else if (searchRole === 2) {
+        try {
+          const response = await api.get("/PersonController/GetLocationsByPerson?personId=" + user?.email);
+          const locations = response.data.return;
+          setAddressList(locations);
+        } catch (error) {
+          console.error("Erro ao buscar localizações:", error);
+          return null;
+        }
+      }
+    };
+    fetchAddressDetails();
+  }, [user, cep, id, searchRole, buttonOn]);
+
+
 
   const toggleTableLocation = () => {
     setButtonOn("");
@@ -58,7 +92,7 @@ const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
           </button>
           <button
             className="dark:text-white mx-2 my-2 flex items-center"
-            onClick={() => {navigate("/config", { state: { showView: "CREATED" }})}}
+            onClick={() => { navigate("/config", { state: { showView: "CREATED" } }) }}
           >
             <div className="flex items-center">
               Criar Localização

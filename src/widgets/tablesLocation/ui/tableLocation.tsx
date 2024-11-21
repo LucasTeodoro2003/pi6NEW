@@ -71,7 +71,8 @@ const TableLocation: React.FC<TableLocationProps> = ({
     fetchAddressDetails();
   }, [address, cep]);
 
-  const handlePersonClick = (listPerson: string[]) => {
+  const handlePersonClick = (locationId: string, listPerson: string[]) => {
+    localStorage.setItem("locationId", locationId);
     localStorage.setItem("listPerson", JSON.stringify(listPerson));
     onButtonClick("person");
   };
@@ -206,7 +207,7 @@ const TableLocation: React.FC<TableLocationProps> = ({
                           <button
                             className="hover:underline w-full flex justify-between"
                             onClick={() => {
-                              handlePersonClick(addr.listPerson);
+                              handlePersonClick(addr.id, addr.listPerson);
                               onButtonClick("person");
                             }}
                           >
