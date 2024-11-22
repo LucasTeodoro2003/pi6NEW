@@ -1,11 +1,18 @@
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router";
 import { api } from "../../../App/serviceApi";
 import { Cam, CamRow } from "../../../Entities/cams";
 
-interface TableCamProps { }
+interface TableCamProps {}
 
 const TableCam: React.FC<TableCamProps> = () => {
   const [camList, setCamList] = useState<Cam[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const locationId = location.state?.locationId || localStorage.getItem("locationId");
+  console.log("Location ID:", locationId);
   const listCam = JSON.parse(localStorage.getItem("listCameras") || "[]");
 
   useEffect(() => {
@@ -15,19 +22,23 @@ const TableCam: React.FC<TableCamProps> = () => {
           const cams: Cam[] = [];
           for (const id of listCam) {
             const response = await api.get(`/CameraController/GetCameraById?cameraId=${id}`);
-            console.log(response.data.return);
-            cams.push(response.data.return);
+            if (response.data?.return) {
+              cams.push(response.data.return);
+            } else {
+              console.error(`Câmera com ID ${id} não encontrada.`);
+            }
           }
           setCamList(cams);
+        } else {
+          console.warn("Nenhuma câmera encontrada na lista.");
         }
       } catch (error) {
-        console.error("Erro ao buscar câmeras: ", error);
+        console.error("Erro ao buscar câmeras:", error);
       }
     };
 
     fetchCams();
   }, [listCam]);
-  
 
   return (
     <div className="ml-6 w-full divide-y divide-gray-200 dark:divide-slate-700 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-600 shadow">
@@ -35,6 +46,21 @@ const TableCam: React.FC<TableCamProps> = () => {
         <h3 className="text-lg font-semibold font-Jakarta leading-6 text-gray-900 dark:text-white">
           Câmeras
         </h3>
+        <button
+          className="flex items-center space-x-2"
+          onClick={() =>
+            navigate("/config", {
+              state: {
+                showView: "CREATED CAM",
+                locationId,
+              },
+            })
+          }
+          disabled={!locationId}
+        >
+          <PlusCircleIcon className="w-6 h-6" />
+          <span>Nova Câmera</span>
+        </button>
       </div>
       <div className="px-2 py-5 sm:p-6">
         <div className="overflow-hidden shadow ring-1 ring-black dark:ring-white ring-opacity-5 dark:ring-opacity-5 md:rounded-lg">
@@ -63,9 +89,18 @@ const TableCam: React.FC<TableCamProps> = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                {camList.map((cam) => (
-                  <CamRow key={cam.id} cam={cam} />
-                ))}
+                {camList.length > 0 ? (
+                  camList.map((cam) => <CamRow key={cam.id} cam={cam} />)
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="text-center py-5 text-gray-500 dark:text-gray-400"
+                    >
+                      Nenhuma câmera encontrada.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

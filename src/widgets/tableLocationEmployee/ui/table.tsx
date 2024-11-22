@@ -77,6 +77,47 @@ const Table: React.FC<TableProps> = () => {
     updatePermissions(personList);
   }, [personList, managers, locationId]);
 
+  // Custom styles for react-select
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      backgroundColor: "white",
+      border: "2px solid #4F46E5", // Border azul
+      borderRadius: "8px",
+      padding: "4px",
+      boxShadow: "none",
+      ":hover": {
+        borderColor: "#4338CA", // Hover mais escuro
+      },
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? "#4F46E5" : state.isFocused ? "#E0E7FF" : "white",
+      color: state.isSelected ? "white" : "#1F2937",
+      padding: "10px",
+      cursor: "pointer",
+    }),
+    multiValue: (provided: any) => ({
+      ...provided,
+      backgroundColor: "#E0E7FF",
+      borderRadius: "4px",
+      color: "#1F2937",
+      fontWeight: "bold",
+    }),
+    multiValueLabel: (provided: any) => ({
+      ...provided,
+      color: "#1F2937",
+    }),
+    multiValueRemove: (provided: any) => ({
+      ...provided,
+      color: "#4F46E5",
+      ":hover": {
+        backgroundColor: "#4338CA",
+        color: "white",
+      },
+    }),
+  };
+
   return (
     <div className="ml-6 w-full divide-y divide-gray-200 dark:divide-slate-700 overflow-visible rounded-lg bg-gray-100 dark:bg-gray-600 shadow">
       <div className="flex justify-between items-center px-2 py-5 sm:px-6">
@@ -92,6 +133,9 @@ const Table: React.FC<TableProps> = () => {
           onChange={(value) => setPersonList(value as Person[])}
           getOptionLabel={(option) => option.name}
           getOptionValue={(option) => option.email}
+          styles={customStyles}
+          placeholder="Selecione os funcionários..."
+          className="text-sm"
         />
       </div>
       <div className="px-2 py-5 sm:p-6">

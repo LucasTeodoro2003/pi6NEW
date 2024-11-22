@@ -1,4 +1,6 @@
+import { useLocation } from "react-router-dom";
 import { DropConfig } from "../../dropConfig";
+import { FormularyCam } from "../../formularyCam";
 import { EdityFormularyLocation, FormularyLocation } from "../../formulayLocation";
 
 interface ConfigAccountProps {
@@ -6,25 +8,34 @@ interface ConfigAccountProps {
   setShowView: (view: string) => void;
 }
 
-const ConfigAccount: React.FC<ConfigAccountProps> = ({showView, setShowView}) => {
+const ConfigAccount: React.FC<ConfigAccountProps> = ({ showView, setShowView }) => {
+  const location = useLocation();
+  const locationId = (location.state as { locationId?: string })?.locationId;
+
   return (
     <div className="flex justify-start ml-6 items-start mt-6 h-auto">
       <div className="divide-y divide-gray-200 rounded-lg bg-gray-100 dark:bg-gray-600 shadow justify-start">
         <div className="px-4 py-5 sm:px-6 justify-start">
-          <DropConfig  onTabs={(name) => setShowView(name)} />
+          <DropConfig onTabs={(name) => setShowView(name)} />
         </div>
         {showView === "EDITY" && (
           <div className="px-4 py-5 sm:p-6 justify-start">
-              <EdityFormularyLocation />
+            <EdityFormularyLocation />
           </div>
-        )}{showView === "CREATED" && (
+        )}
+        {showView === "CREATED" && (
           <div className="px-4 py-5 sm:p-6 justify-start">
-              <FormularyLocation />
+            <FormularyLocation />
+          </div>
+        )}
+        {showView === "CREATED CAM" && (
+          <div className="px-4 py-5 sm:p-6 justify-start">
+            <FormularyCam locationId={locationId} />
           </div>
         )}
       </div>
     </div>
   );
-}
+};
 
 export { ConfigAccount };
