@@ -11,6 +11,7 @@ import { NotFoundPage } from "../../notFound";
 function NewHomePage() {
   const [show, setShow] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const { isLoggedIn, id } = useAuth();
 
   useEffect(() => {
@@ -19,21 +20,18 @@ function NewHomePage() {
         .then((response) => {
           const fetchedUser = response.data.return;
           setUser(fetchedUser);
+          localStorage.setItem("user", JSON.stringify(fetchedUser));
         })
         .catch((err) => {
           console.error("Aconteceu um erro: " + err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   }, [id, isLoggedIn]);
 
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
-  }, [user]);
-  // console.log(JSON.parse(localStorage.getItem("user") || ""))
-
-  if (!isLoggedIn) {
+  if (!isLoggedIn || loading) {
     return <NotFoundPage />;
   }
 
