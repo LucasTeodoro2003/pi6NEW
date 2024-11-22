@@ -77,7 +77,6 @@ const Table: React.FC<TableProps> = () => {
     updatePermissions(personList);
   }, [personList, managers, locationId]);
 
-  // Custom styles for react-select
   const customStyles = {
     control: (provided: any) => ({
       ...provided,
