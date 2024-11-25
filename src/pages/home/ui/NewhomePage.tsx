@@ -11,7 +11,6 @@ import { NotFoundPage } from "../../notFound";
 function NewHomePage() {
   const [show, setShow] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const { isLoggedIn, id } = useAuth();
 
   useEffect(() => {
@@ -26,12 +25,11 @@ function NewHomePage() {
           console.error("Aconteceu um erro: " + err);
         })
         .finally(() => {
-          setLoading(false);
         });
     }
   }, [id, isLoggedIn]);
 
-  if (!isLoggedIn || loading) {
+  if (!isLoggedIn) {
     return <NotFoundPage />;
   }
 

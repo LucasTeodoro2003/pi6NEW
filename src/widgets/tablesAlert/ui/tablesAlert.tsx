@@ -27,15 +27,23 @@ interface Notification {
 const TablesAlert: React.FC = () => {
   const [showPersonId, setShowPersonId] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getNotifications = async () => {
     try {
       const response = await api.get(
         "/NotificationsController/GetAllNotifications"
       );
-      setNotifications(response.data.return);
+      // Ordena as notificações do mais novo para o mais velho
+      const sortedNotifications = response.data.return.sort(
+        (a: Notification, b: Notification) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setNotifications(sortedNotifications);
     } catch (err) {
       console.error("Erro ao carregar notificações:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,6 +82,14 @@ const TablesAlert: React.FC = () => {
   const detailsPerson = (id: string) => {
     setShowPersonId(showPersonId === id ? null : id);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen dark:bg-gray-800">
+        <p className="text-white text-lg">Carregando notificações...</p>
+      </div>
+    );
+  }
 
   return (
     <ul className="ml-4 mt-4 mr-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -144,7 +160,7 @@ const TablesAlert: React.FC = () => {
                   Nenhuma pessoa detectada
                 </p>
               )}
-              <p className="text-sm  dark:text-white">
+              <p className="text-sm dark:text-white">
                 Número de pessoas detectadas: {notification.numberOfPersons}
               </p>
             </div>
