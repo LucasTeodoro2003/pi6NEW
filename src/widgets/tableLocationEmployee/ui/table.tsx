@@ -118,7 +118,7 @@ const Table: React.FC<TableProps> = () => {
   };
 
   return (
-    <div className="ml-6 w-full divide-y divide-gray-200 dark:divide-slate-700 overflow-visible rounded-lg bg-gray-100 dark:bg-gray-600 shadow">
+    <div className="ml-6 w-full mr-6 divide-y divide-gray-200 dark:divide-slate-700 overflow-visible rounded-lg bg-gray-100 dark:bg-gray-600 shadow">
       <div className="flex justify-between items-center px-2 py-5 sm:px-6">
         <h3 className="text-lg font-semibold font-Jakarta leading-6 text-gray-900 dark:text-white">
           Funcionários
