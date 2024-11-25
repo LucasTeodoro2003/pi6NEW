@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { api } from "../../../App/serviceApi";
 
@@ -21,11 +21,13 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const searchRole = user?.permissions[0]?.role;
+  console.log(searchRole);
 
   const locations = JSON.parse(localStorage.getItem("listLocations") || "[]");
 
-  useEffect(() => {
+  useState(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       if (searchRole !== 1) {
         try {
           const allCameras: Camera[] = [];
@@ -45,6 +47,8 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
           setCameras(allCameras);
         } catch (error) {
           console.error("Erro ao buscar câmeras por localização:", error);
+        } finally {
+          setIsLoading(false);
         }
       } else {
         try {
@@ -54,15 +58,16 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
           }
         } catch (error) {
           console.error("Erro ao buscar todas as câmeras:", error);
-        }finally {
-            setIsLoading(false);
-          }
+        } finally {
+          setIsLoading(false);
+        }
       }
     };
 
-    fetchData();
-  }, [searchRole, locations]);
-
+    if (locations.length > 0) {
+      fetchData();
+    }
+  });
 
   if (isLoading) {
     return (
@@ -73,42 +78,43 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-      {cameras.map((camera) => (
-        <div
-          key={camera.id}
-          className="border border-gray-300 rounded-lg overflow-hidden shadow-lg dark:bg-gray-800 dark:text-white"
-        >
-          <div className="bg-gray-100 dark:bg-gray-900 p-4">
-            <h3 className="text-lg font-bold text-center">{camera.name}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-            </p>
+    <div className="w-full dark:bg-gray-800 min-h-screen">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+        {cameras.map((camera) => (
+          <div
+            key={camera.id}
+            className="border border-gray-300 rounded-lg overflow-hidden shadow-lg dark:bg-gray-800 dark:text-white"
+          >
+            <div className="bg-gray-100 dark:bg-gray-900 p-4">
+              <h3 className="text-lg font-bold text-center">{camera.name}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400"></p>
+            </div>
+            <div className="relative bg-black">
+                
+            {/* mudar depois para camera.feedURL */}
+
+
+              {camera.description ? (
+                <ReactPlayer
+                  url={camera.description}
+                  playing
+                  controls
+                  width="100%"
+                  height="200px"
+                  className="react-player"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-52 bg-gray-200 dark:bg-gray-700 text-red-500">
+                  <span>Câmera sem URL</span>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="relative bg-black">
-
-            {/* Tenho que Mudar Depois  {camera.feedUrl}*/}
-
-
-
-            {camera.description ? (
-              <ReactPlayer
-                url={camera.description}
-                playing
-                controls
-                width="100%"
-                height="200px"
-                className="react-player"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-52 bg-gray-200 dark:bg-gray-700 text-red-500">
-                <span>Câmera sem URL</span>
-              </div>
-            )}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
+  
 };
 
 export { ShowcamUser };

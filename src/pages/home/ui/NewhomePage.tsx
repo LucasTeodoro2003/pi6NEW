@@ -13,6 +13,7 @@ function NewHomePage() {
   const [user, setUser] = useState<User | null>(null);
   const { isLoggedIn, id } = useAuth();
 
+
   useEffect(() => {
     if (isLoggedIn && id) {
       api.get("/PersonController/GetPerson?email=" + id)
@@ -28,6 +29,8 @@ function NewHomePage() {
         });
     }
   }, [id, isLoggedIn]);
+
+  console.log(user?.permissions[0].role)
 
   if (!isLoggedIn) {
     return <NotFoundPage />;
