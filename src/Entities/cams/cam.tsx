@@ -1,10 +1,31 @@
+import { PencilIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { useNavigate } from "react-router";
+import { api } from "../../App/serviceApi";
 import { Cam } from "./types";
 
 interface CamRowProps {
   cam: Cam;
 }
 
-export function CamRow({ cam }: CamRowProps) {
+const CamRow: React.FC<CamRowProps> = ({ cam }) => {
+  const navigate = useNavigate();
+
+  const deleteCam = async (id: string) => {
+    try {
+      const response = await api.delete(
+        "/CameraController/DeleteCamera?cameraId=" + id
+      );
+      console.log(response.data.return);
+      console.log("Deletando: ", id);
+    } catch (error) {
+      console.error("Error ao deletar Localização:", error);
+    }
+    window.location.reload();
+  };
+
+  const edityCamId = (id: string) => {
+    localStorage.setItem("edityCam", id);
+  };
 
   return (
     <tr key={cam.id}>
@@ -13,7 +34,7 @@ export function CamRow({ cam }: CamRowProps) {
           <div className="h-10 w-10 flex-shrink-0">
             <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
               <span className="text-xl font-bold text-gray-500">
-                {cam.name ? cam.name.charAt(0).toUpperCase() : '?'}
+                {cam.name ? cam.name.charAt(0).toUpperCase() : "?"}
               </span>
             </div>
           </div>
@@ -53,6 +74,25 @@ export function CamRow({ cam }: CamRowProps) {
           </button>
         )}
       </td>
+      <td className="whitespace-nowrap px-4 text-sm text-center flex justify-center space-x-3">
+        <button
+          className="dark:text-gray-400 text-gray-600 transform transition-transform duration-200 ease-in-out hover:scale-125"
+          onClick={() => {navigate("/config", {
+            state: {
+              showView: "EDITY CAM",
+            },
+          }); edityCamId(cam.id)}}
+        >
+          <PencilIcon className="w-5 h-5" />
+        </button>
+        <button
+          className="text-red-400 transform transition-transform duration-100 ease-in-out hover:scale-125"
+          onClick={() => {deleteCam(cam.id)}}
+        >
+          <TrashIcon className="w-5 h-5" />
+        </button>
+      </td>
     </tr>
   );
-}
+};
+export { CamRow };

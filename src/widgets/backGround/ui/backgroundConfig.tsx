@@ -1,6 +1,7 @@
 import { ArrowUturnLeftIcon } from "@heroicons/react/20/solid";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { SucessMensageCamEdity } from "../../../shared/ui";
 import { SucessMensageCam } from "../../../shared/ui/SucessMensage/SucessMensageCam";
 import { SucessMensageLocation } from "../../../shared/ui/SucessMensage/SucessMensageLocation";
 import { ConfigAccount } from "../../configAccount";
@@ -13,6 +14,7 @@ interface BackgroundConfigProps {
 const BackgroundConfig: React.FC<BackgroundConfigProps> = ({showView, setShowView}) => {
   const [mensage, setMensage] = useState(false);
   const [mensageCam, setMensageCam] = useState(false);
+  const [mensageEdityCam, setMensageEdityCam] = useState(false)
   const [fadeOut, setFadeOut] = useState(false);
   const [buttonOn, setButtonOn] = useState("");
   const location = useLocation();
@@ -72,6 +74,25 @@ const handleButtonClick = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const showSuccessMessageCamEdity = localStorage.getItem("showSuccessMessageCamEdity");
+
+    if (showSuccessMessageCamEdity === "true") {
+      setMensageEdityCam(true);
+      localStorage.removeItem("showSuccessMessageCamEdity");
+
+      setTimeout(() => {
+        setFadeOut(true);
+      }, 3000);
+
+      setTimeout(() => {
+        setMensageEdityCam(false);
+        setFadeOut(false);
+        window.location.href = "/home";
+      }, 4000);
+    }
+  }, []);
+
   return (
     <div className="flex h-[calc(100vh-98px)] ml-64">
       <div className="bg-white dark:bg-gray-800 w-full h-max">
@@ -93,6 +114,15 @@ const handleButtonClick = () => {
             }`}
           >
             <SucessMensageCam />
+          </div>
+        )}
+        {mensageEdityCam && (
+          <div
+            className={`transition-opacity duration-1000 ${
+              fadeOut ? "opacity-0" : "opacity-100"
+            }`}
+          >
+            <SucessMensageCamEdity />
           </div>
         )}
         <div className="flex mt-5 mx-5 bg-white dark:bg-gray-800">

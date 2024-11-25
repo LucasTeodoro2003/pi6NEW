@@ -86,6 +86,12 @@ const TableCam: React.FC<TableCamProps> = () => {
                   >
                     Status do Feed
                   </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3.5 text-center text-sm font-semibold font-Jakarta text-gray-900 dark:text-white"
+                  >
+                    Ações
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">

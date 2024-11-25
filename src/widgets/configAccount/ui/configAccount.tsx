@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { DropConfig } from "../../dropConfig";
-import { FormularyCam } from "../../formularyCam";
+import { EdityFormularyCam, FormularyCam } from "../../formularyCam";
 import { EdityFormularyLocation, FormularyLocation } from "../../formulayLocation";
 
 interface ConfigAccountProps {
@@ -11,6 +11,8 @@ interface ConfigAccountProps {
 const ConfigAccount: React.FC<ConfigAccountProps> = ({ showView, setShowView }) => {
   const location = useLocation();
   const locationId = (location.state as { locationId?: string })?.locationId;
+
+  console.log(showView)
 
   return (
     <div className="flex justify-start ml-6 items-start mt-6 h-auto">
@@ -31,6 +33,11 @@ const ConfigAccount: React.FC<ConfigAccountProps> = ({ showView, setShowView }) 
         {showView === "CREATED CAM" && (
           <div className="px-4 py-5 sm:p-6 justify-start">
             <FormularyCam locationId={locationId} />
+          </div>
+        )}
+        {showView === "EDITY CAM" && (
+          <div className="px-4 py-5 sm:p-6 justify-start">
+            <EdityFormularyCam />
           </div>
         )}
       </div>

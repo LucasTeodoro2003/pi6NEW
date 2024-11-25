@@ -1,5 +1,5 @@
 export interface Cam {
-  id: number,
+  id: string,
   feedUrl: boolean;
   model: string[];
   name: string;
