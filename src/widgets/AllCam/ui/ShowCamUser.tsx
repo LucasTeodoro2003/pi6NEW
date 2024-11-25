@@ -17,6 +17,8 @@ interface Camera {
 
 const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
   const [cameras, setCameras] = useState<Camera[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const searchRole = user?.permissions[0]?.role;
 
@@ -52,12 +54,23 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
           }
         } catch (error) {
           console.error("Erro ao buscar todas as câmeras:", error);
-        }
+        }finally {
+            setIsLoading(false);
+          }
       }
     };
 
     fetchData();
   }, [searchRole, locations]);
+
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen dark:bg-gray-800">
+        <p className="text-white text-lg">Carregando Cameras...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">

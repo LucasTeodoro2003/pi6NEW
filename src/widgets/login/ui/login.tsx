@@ -18,6 +18,7 @@ function Login() {
     localStorage.removeItem("listCameras");
     localStorage.removeItem("id")
     localStorage.removeItem("listLocations")
+    localStorage.removeItem("locationId")
   }, []);
 
   const verifyButton = async (e: FormEvent<HTMLFormElement>) => {

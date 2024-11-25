@@ -35,11 +35,7 @@ function NewHomePage() {
 
   return (
     <main>
-      <Header
-        onCameraClick={() => {
-          setShow(true);
-        }}
-      />
+      <Header/>
       <NewbackgroundHome user={user}/>
       <CamNotFound show={show} setShowAlert={setShow} />
       <Sidebar />

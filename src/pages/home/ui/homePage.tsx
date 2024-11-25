@@ -83,12 +83,7 @@ function HomePage() {
 
   return (
     <main>
-      <Header
-        onCameraClick={() => {
-          setShow(true);
-          setVideosId(tabs[0].href);
-        }}
-      />
+      <Header/>
       <BackgroundHome
         people={people}
         VideosId={videosId}

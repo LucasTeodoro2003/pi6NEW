@@ -1,10 +1,7 @@
-import { CameraIcon } from "@heroicons/react/20/solid";
 import { ToggleDarkorWhiteV2 } from "../../../shared/ui";
-interface ReceiveName {
-  onCameraClick: () => void;
-}
+interface ReceiveName {}
 
-const Header: React.FC<ReceiveName> = ({ onCameraClick }) => {
+const Header: React.FC<ReceiveName> = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}")
 
   return (
@@ -14,12 +11,6 @@ const Header: React.FC<ReceiveName> = ({ onCameraClick }) => {
           <div className="flex justify-end space-x-10 mb-8 mr-11 w-screen text-gray-800 dark:text-white font-Jakarta font-medium">
             <div className="font-Jakarta font-extrabold">Bem-vindo, {user?.name}</div>
             <div className="ml-10">|</div>
-            <button onClick={onCameraClick}>
-              <CameraIcon
-                title="Câmera"
-                className="w-8 h-8 text-gray-800 dark:text-white"
-              />
-            </button>
             <ToggleDarkorWhiteV2 />
           </div>
         </div>

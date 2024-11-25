@@ -1,5 +1,4 @@
 import { useEffect, useState} from "react";
-import { useNavigate } from "react-router";
 import { useAuth } from "../../../App/authPages";
 import { api } from "../../../App/serviceApi";
 import { User } from "../../../Entities/users";
@@ -12,7 +11,6 @@ function FormularyPage() {
   useEffect(() => {
     fetch("");
   });
-  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const { isLoggedIn, id } = useAuth();
 
@@ -37,11 +35,7 @@ function FormularyPage() {
 
   return (
     <main>
-      <Header
-        onCameraClick={() => {
-          navigate("/home?cameraID=1");
-        }}
-      />
+      <Header/>
       <Sidebar/>
       <BackgroundFormulary user={user}/>
     </main>

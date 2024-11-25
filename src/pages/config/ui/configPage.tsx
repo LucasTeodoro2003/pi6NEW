@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { useAuth } from "../../../App/authPages";
 import { BackgroundConfig } from "../../../widgets/backGround";
 import { Header } from "../../../widgets/header";
@@ -7,7 +7,6 @@ import { Sidebar } from "../../../widgets/SideBar";
 import { NotFoundPage } from "../../notFound";
 
 function ConfigPage() {
-  const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const location = useLocation();
   const [showView, setShowView] = useState(location.state?.showView || "");
@@ -26,11 +25,7 @@ function ConfigPage() {
 
   return (
     <main className="bg-white dark:bg-gray-800"> 
-      <Header
-        onCameraClick={() => {
-          navigate("/home?cameraID=1");
-        }}
-      />
+      <Header/>
       <Sidebar />
       <BackgroundConfig showView={showView} setShowView={setShowView}/>
     </main>

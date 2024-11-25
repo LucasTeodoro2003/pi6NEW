@@ -1,16 +1,12 @@
 import { Menu, Transition } from "@headlessui/react";
 import {
-  ArchiveBoxIcon,
-  ArrowRightCircleIcon,
   ChevronDownIcon,
-  DocumentDuplicateIcon,
-  HeartIcon,
   PencilIcon,
   PencilSquareIcon,
   TrashIcon,
-  UserPlusIcon,
 } from "@heroicons/react/20/solid";
 import { Fragment } from "react";
+import { api } from "../../../App/serviceApi";
 
 
 function classNames(...classes: string[]) {
@@ -20,6 +16,23 @@ function classNames(...classes: string[]) {
 interface DropConfigProps {
   onTabs: (name:string) => void;
 }
+
+const user = JSON.parse(localStorage.getItem("user") || "{}")
+const email = user?.email
+
+console.log(email)
+
+const deleteAccount = async () => {
+  try {
+     await api.delete(
+      "/PersonController/DeletePerson?email=" + email
+    );
+    console.log("Deletando: ", email);
+  } catch (error) {
+    console.error("Error ao deletar Localização:", error);
+  }
+  window.location.reload();
+};
 
 
 function DropConfig({ onTabs }: DropConfigProps) {
@@ -73,103 +86,12 @@ function DropConfig({ onTabs }: DropConfigProps) {
                 </button>
               )}
             </Menu.Item>
-            </div>
-            <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={() => {onTabs("")}}
-                  className={classNames(
-                    active ? "bg-gray-100 dark:bg-gray-400 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm w-full dark:text-white"
-                  )}
-                >
-                  <DocumentDuplicateIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-white"
-                    aria-hidden="true"
-                  />
-                  Duplicate
-                </button>
-              )}
-            </Menu.Item>
           </div>
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => { }}
-                  className={classNames(
-                    active ? "bg-gray-100 dark:bg-gray-400 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm w-full dark:text-white"
-                  )}
-                >
-                  <ArchiveBoxIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-white"
-                    aria-hidden="true"
-                  />
-                  Archive
-                </button>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={() => { }}
-                  className={classNames(
-                    active ? "bg-gray-100 dark:bg-gray-400 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm w-full dark:text-white"
-                  )}
-                >
-                  <ArrowRightCircleIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-white"
-                    aria-hidden="true"
-                  />
-                  Move
-                </button>
-              )}
-            </Menu.Item>
-          </div>
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={() => { }}
-                  className={classNames(
-                    active ? "bg-gray-100 dark:bg-gray-400 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm w-full dark:text-white"
-                  )}
-                >
-                  <UserPlusIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-white"
-                    aria-hidden="true"
-                  />
-                  Share
-                </button>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={() => { }}
-                  className={classNames(
-                    active ? "bg-gray-100 dark:bg-gray-400 text-gray-900" : "text-gray-700",
-                    "group flex items-center px-4 py-2 text-sm w-full dark:text-white"
-                  )}
-                >
-                  <HeartIcon
-                    className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-white"
-                    aria-hidden="true"
-                  />
-                  Add to favorites
-                </button>
-              )}
-            </Menu.Item>
-          </div>
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={() => { }}
+                  onClick={() => {deleteAccount()}}
                   className={classNames(
                     active ? "bg-gray-100 dark:bg-gray-400 text-gray-900" : "text-gray-700",
                     "group flex items-center px-4 py-2 text-sm w-full dark:text-white"
@@ -179,7 +101,7 @@ function DropConfig({ onTabs }: DropConfigProps) {
                     className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:text-white"
                     aria-hidden="true"
                   />
-                  Delete
+                  Deletar Conta
                 </button>
               )}
             </Menu.Item>

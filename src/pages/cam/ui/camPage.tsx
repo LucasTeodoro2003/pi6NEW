@@ -1,5 +1,4 @@
 import { useEffect} from "react";
-import { useNavigate } from "react-router";
 import { useAuth } from "../../../App/authPages";
 import { BackgroundCam } from "../../../widgets/backGround";
 import { Header } from "../../../widgets/header";
@@ -10,7 +9,6 @@ function CamPage() {
   useEffect(() => {
     fetch("");
   });
-  const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
 
@@ -20,11 +18,7 @@ function CamPage() {
 
   return (
     <main>
-      <Header
-        onCameraClick={() => {
-          navigate("/home?cameraID=1");
-        }}
-      />
+      <Header/>
       <Sidebar />
       <BackgroundCam />
     </main>

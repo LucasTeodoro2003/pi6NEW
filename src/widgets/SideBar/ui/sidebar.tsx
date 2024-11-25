@@ -4,7 +4,6 @@ import {
   Cog8ToothIcon,
   HomeIcon,
   IdentificationIcon,
-  InboxIcon,
   VideoCameraIcon,
 } from '@heroicons/react/24/outline';
 import React from 'react';
@@ -25,7 +24,6 @@ const navigation: NavigationItem[] = [
   { name: 'Alertas', link: '/alert', icon: BellAlertIcon },
   { name: 'Funcionários', link: '/formulary', icon: IdentificationIcon },
   { name: 'Câmeras', link: '/cam', icon: VideoCameraIcon },
-  { name: 'Documents', link: '#', icon: InboxIcon },
   { name: 'Configurações', link: '/config', icon: Cog8ToothIcon },
 ];
 
@@ -48,6 +46,10 @@ const Sidebar: React.FC<HomePagePromps> = () => {
     localStorage.removeItem('token');
     localStorage.removeItem("user")
     localStorage.removeItem("listCameras")
+    localStorage.removeItem("locationId")
+    localStorage.removeItem("listPerson");
+    localStorage.removeItem("id")
+    localStorage.removeItem("listLocations")
     navegationPages("/Login");
   };
 
@@ -87,7 +89,7 @@ const Sidebar: React.FC<HomePagePromps> = () => {
               </Link>
             ))}
           </nav>
-          <div className='mt-12'>
+          <div className='mt-28'>
             <img src="epi.png" alt="" className='opacity-70 ' />
           </div>
           <div className='flex justify-between items-center mt-2 ml-2 mr-2 rounded-md'>
