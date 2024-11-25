@@ -77,7 +77,8 @@ const TableLocation: React.FC<TableLocationProps> = ({
     onButtonClick("person");
   };
 
-  const handleCameraClick = (listCameras: string[]) => {
+  const handleCameraClick = (locationId: string ,listCameras: string[]) => {
+    localStorage.setItem("locationId", locationId);
     localStorage.setItem("listCameras", JSON.stringify(listCameras));
     onButtonClick("cam");
   };
@@ -226,7 +227,7 @@ const TableLocation: React.FC<TableLocationProps> = ({
                           <button
                             className="hover:underline w-full flex justify-between"
                             onClick={() => {
-                              handleCameraClick(addr.listCameras);
+                              handleCameraClick(addr.id, addr.listCameras);
                               onButtonClick("cam");
                             }}
                           >

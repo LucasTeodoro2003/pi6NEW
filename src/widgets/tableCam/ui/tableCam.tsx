@@ -12,7 +12,7 @@ const TableCam: React.FC<TableCamProps> = () => {
   const location = useLocation();
 
   const locationId = location.state?.locationId || localStorage.getItem("locationId");
-  console.log("Location ID:", locationId);
+  console.log("ID: " + locationId)
   const listCam = JSON.parse(localStorage.getItem("listCameras") || "[]");
 
   useEffect(() => {
@@ -47,12 +47,12 @@ const TableCam: React.FC<TableCamProps> = () => {
           Câmeras
         </h3>
         <button
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 dark:text-white"
           onClick={() =>
             navigate("/config", {
               state: {
                 showView: "CREATED CAM",
-                locationId,
+                locationId, // Garante que o ID da localização é enviado
               },
             })
           }

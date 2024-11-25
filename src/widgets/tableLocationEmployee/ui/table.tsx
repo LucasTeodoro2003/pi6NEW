@@ -81,12 +81,12 @@ const Table: React.FC<TableProps> = () => {
     control: (provided: any) => ({
       ...provided,
       backgroundColor: "white",
-      border: "2px solid #4F46E5", // Border azul
+      border: "2px solid #4F46E5",
       borderRadius: "8px",
       padding: "4px",
       boxShadow: "none",
       ":hover": {
-        borderColor: "#4338CA", // Hover mais escuro
+        borderColor: "#4338CA",
       },
     }),
     option: (provided: any, state: any) => ({
