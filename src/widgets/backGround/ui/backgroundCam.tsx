@@ -1,6 +1,7 @@
 import { ArrowUturnLeftIcon } from "@heroicons/react/20/solid";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { ShowcamUser } from "../../AllCam";
 
 interface InicarCamera {}
 
@@ -26,10 +27,10 @@ const handleButtonClick = () => {
   }
 };
   return (
-    <div className="flex h-screen ml-64">
+    <div className="flex h-full ml-64">
       <div className="bg-white dark:bg-gray-800 w-full h-full ">
       <button className="dark:text-white mx-2 my-2" onClick={handleButtonClick}><ArrowUturnLeftIcon className="h-6 w-6" /></button>
-        CAMERAS
+        <ShowcamUser />
         <div className="flex mt-5 mx-5 bg-white dark:bg-gray-800">
           <div className="flex text-justify w-screen"></div>
         </div>

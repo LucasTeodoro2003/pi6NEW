@@ -52,7 +52,7 @@ const TableCam: React.FC<TableCamProps> = () => {
             navigate("/config", {
               state: {
                 showView: "CREATED CAM",
-                locationId, // Garante que o ID da localização é enviado
+                locationId,
               },
             })
           }

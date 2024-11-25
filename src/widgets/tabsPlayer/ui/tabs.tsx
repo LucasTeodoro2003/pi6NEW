@@ -1,4 +1,3 @@
-// Tabs.tsx
 import React from "react";
 
 interface Tab {

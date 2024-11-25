@@ -34,7 +34,6 @@ const TablesAlert: React.FC = () => {
       const response = await api.get(
         "/NotificationsController/GetAllNotifications"
       );
-      // Ordena as notificações do mais novo para o mais velho
       const sortedNotifications = response.data.return.sort(
         (a: Notification, b: Notification) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
