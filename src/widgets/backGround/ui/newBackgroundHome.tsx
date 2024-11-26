@@ -2,7 +2,6 @@ import { ArrowUturnLeftIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Popup from "reactjs-popup";
-import { useAuth } from "../../../App/authPages";
 import { api } from "../../../App/serviceApi";
 import { Address } from "../../../Entities/address";
 import { User } from "../../../Entities/users";
@@ -18,8 +17,6 @@ interface NewBackgroundHomeProps {
 const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
   user,
 }) => {
-  const { id } = useAuth();
-
   const [address, setAddressList] = useState<Address[]>([]);
   const [isDetailsPopupOpen, setIsDetailsPopupOpen] = useState(false);
   const [buttonOn, setButtonOn] = useState("");
@@ -36,22 +33,42 @@ const NewbackgroundHome: React.FC<NewBackgroundHomeProps> = ({
           const locations = response.data.return;
           setAddressList(locations);
         } catch (error) {
-          console.error("Erro ao buscar localizações:", error);
-          return null;
+          console.error("Erro ao buscar todas as localizações:", error);
         }
-      } else if (searchRole === 2) {
+      } else {
         try {
-          const response = await api.get("/PersonController/GetLocationsByPerson?personId=" + user?.email);
-          const locations = response.data.return;
-          setAddressList(locations);
+          const permissions = user?.permissions || [];
+          const locationPromises = permissions.map(async (permission) => {
+            try {
+              const response = await api.get(
+                `/PersonController/GetLocationsByPerson?personId=${user?.email}&locationId=${permission.locationId}`
+              );
+              return response.data.return;
+            } catch (error) {
+              console.error(
+                `Erro ao buscar localização para ID: ${permission.locationId}`,
+                error
+              );
+              return [];
+            }
+          });
+
+          const locationsArray = await Promise.all(locationPromises);
+          const allLocations = locationsArray.flat();
+          const uniqueLocations = Array.from(
+            new Map(allLocations.map((loc) => [loc.id, loc])).values()
+          );
+
+          setAddressList(uniqueLocations);
         } catch (error) {
-          console.error("Erro ao buscar localizações:", error);
-          return null;
+          console.error("Erro ao buscar localizações por permissões:", error);
         }
       }
     };
+
     fetchAddressDetails();
-  }, [user, id, searchRole, buttonOn]);
+  }, [user, searchRole, buttonOn]);
+  
 
 
 

@@ -21,36 +21,13 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const searchRole = user?.permissions[0]?.role;
-  console.log(searchRole);
-
-  const locations = JSON.parse(localStorage.getItem("listLocations") || "[]");
-
+  
   useState(() => {
+    const permissions = user?.permissions || [];
     const fetchData = async () => {
       setIsLoading(true);
-      if (searchRole !== 1) {
-        try {
-          const allCameras: Camera[] = [];
-
-          for (const location of locations) {
-            const { id: locationId } = location;
-
-            const response = await api.get(
-              `/LocationController/GetCamerasByLocation?locationId=${locationId}`
-            );
-
-            if (response.data.success && Array.isArray(response.data.return)) {
-              allCameras.push(...response.data.return);
-            }
-          }
-
-          setCameras(allCameras);
-        } catch (error) {
-          console.error("Erro ao buscar câmeras por localização:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      } else {
+  
+      if (searchRole === 1) {
         try {
           const response = await api.get("/CameraController/GetAllCamera");
           if (response.data.success && Array.isArray(response.data.return)) {
@@ -61,18 +38,46 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
         } finally {
           setIsLoading(false);
         }
+      } else {
+        try {
+          const cameraPromises = permissions.map(async (permission:any) => {
+            const locationId = permission.locationId;
+            try {
+              const response = await api.get(
+                `/LocationController/GetCamerasByLocation?locationId=${locationId}`
+              );
+              if (response.data.success && Array.isArray(response.data.return)) {
+                return response.data.return;
+              }
+              return [];
+            } catch (error) {
+              console.error(
+                `Erro ao buscar câmeras para locationId: ${locationId}`,
+                error
+              );
+              return [];
+            }
+          });
+  
+          const cameraResults = await Promise.all(cameraPromises);
+          const uniqueCameras = cameraResults.flat();
+          setCameras(uniqueCameras);
+        } catch (error) {
+          console.error("Erro ao buscar câmeras por permissões:", error);
+        } finally {
+          setIsLoading(false);
+        }
       }
     };
-
-    if (locations.length > 0) {
-      fetchData();
-    }
+  
+    fetchData();
   });
+  
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen dark:bg-gray-800">
-        <p className="text-white text-lg">Carregando Cameras...</p>
+        <p className="text-white text-lg">Carregando Câmeras...</p>
       </div>
     );
   }
@@ -87,13 +92,8 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
           >
             <div className="bg-gray-100 dark:bg-gray-900 p-4">
               <h3 className="text-lg font-bold text-center">{camera.name}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400"></p>
             </div>
             <div className="relative bg-black">
-                
-            {/* mudar depois para camera.feedURL */}
-
-
               {camera.description ? (
                 <ReactPlayer
                   url={camera.description}
@@ -114,7 +114,6 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
       </div>
     </div>
   );
-  
 };
 
 export { ShowcamUser };
