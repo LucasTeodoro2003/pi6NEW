@@ -7,16 +7,19 @@ import { Person } from "../../../Entities/employee";
 interface TableProps {}
 
 const Table: React.FC<TableProps> = () => {
+  const [doneLoading, setDoneLoading] = useState(false);
   const [personList, setPersonList] = useState<Person[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const locationId = localStorage.getItem("locationId");
-  const [listPerson] = useState(JSON.parse(localStorage.getItem("listPerson") || "[]"));
+  const [listPerson] = useState(
+    JSON.parse(localStorage.getItem("listPerson") || "[]")
+  );
   const [managers, setManagers] = useState<string[]>([]);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const searchRole = user?.permissions[0].role;
 
   useEffect(() => {
-    const fetchAddressDetails = async () => {
+    const fetchPeople = async () => {
       try {
         const response = await api.get("/PersonController/GetAllPerson");
         let peopleLocations = response.data.return;
@@ -34,8 +37,32 @@ const Table: React.FC<TableProps> = () => {
         return null;
       }
     };
-    fetchAddressDetails();
+    fetchPeople();
   }, [searchRole]);
+
+  useEffect(() => {
+    const fetchPersonPermissions = async () => {
+      try {
+        const response = await api.get(
+          "/PersonController/GetPersonFromLocation?locationId=" + locationId
+        );
+        for (const person of response.data.return) {
+          let personRole = person.permissions.find(
+            (p: any) => p.locationId === locationId
+          )?.role;
+          if (personRole === 2) {
+            setManagers((managers) => [...managers, person.id]);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao buscar fetchPersonPermissions:", error);
+        return null;
+      }
+    };
+    fetchPersonPermissions().then(() => {
+      setDoneLoading(true);
+    });
+  }, [searchRole, user?.email, locationId]);
 
   useEffect(() => {
     const fetchPerson = async () => {
@@ -60,6 +87,7 @@ const Table: React.FC<TableProps> = () => {
   }, [listPerson]);
 
   useEffect(() => {
+    if (!doneLoading) return;
     const updatePermissions = async (personList: Person[]) => {
       try {
         await api.put(
@@ -75,7 +103,7 @@ const Table: React.FC<TableProps> = () => {
       }
     };
     updatePermissions(personList);
-  }, [personList, managers, locationId]);
+  }, [personList, managers, locationId, doneLoading]);
 
   const customStyles = {
     control: (provided: any) => ({
@@ -91,7 +119,11 @@ const Table: React.FC<TableProps> = () => {
     }),
     option: (provided: any, state: any) => ({
       ...provided,
-      backgroundColor: state.isSelected ? "#4F46E5" : state.isFocused ? "#E0E7FF" : "white",
+      backgroundColor: state.isSelected
+        ? "#4F46E5"
+        : state.isFocused
+        ? "#E0E7FF"
+        : "white",
       color: state.isSelected ? "white" : "#1F2937",
       padding: "10px",
       cursor: "pointer",
