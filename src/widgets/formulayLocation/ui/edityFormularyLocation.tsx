@@ -44,7 +44,7 @@ const EdityFormularyLocation = () => {
   const userFromLocalStorage = localStorage.getItem("user");
   const user = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : null;
   const searchRole = user?.permissions[0]?.role;
-  const personId = user?.id;
+  const personId = user?.email;
 
   const fetchLocations = useCallback(async () => {
     setIsFetching(true);
@@ -52,7 +52,7 @@ const EdityFormularyLocation = () => {
       const endpoint =
         searchRole === 1
           ? "/LocationController/GetAllLocation"
-          : `/LocationController/GetLocationsByPerson?personId=${personId}`;
+          : `/PersonController/GetLocationsByPerson?personId=${personId}`;
       const response = await api.get(endpoint);
       if (Array.isArray(response.data.return)) {
         setLocations(response.data.return);
