@@ -4,3 +4,4 @@ export * from "./maps/googleMapsView";
 export * from "./SucessMensage/SucessMensage";
 export * from "./alertNot/alertNot"
 export * from "./SucessMensage/SucessMensageCamEdity"
+export * from "./errorModal/errorModal"

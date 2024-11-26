@@ -1,7 +1,8 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { api } from "../../../App/serviceApi";
+import { ErrorModal } from "../../../shared/ui";
 
 const FormularyLocation = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +18,8 @@ const FormularyLocation = () => {
   });
 
   const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [error2, setError2] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,8 +96,15 @@ const FormularyLocation = () => {
         aditionalInfo: formData.aditionalInfo,
       });
       navigate("/home");
-    } catch (err) {
-      console.error("Erro ao enviar o formulário:", err);
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        setError("Erro ao enviar o formulário. Verifique os dados e tente novamente. ");
+        setError2(err.response?.data)
+        console.error("Erro ao enviar o formulário: ", err.response?.data);
+      } else {
+        setError("Erro desconhecido ao enviar o formulário.");
+        console.error("Erro desconhecido:", err);
+      }
     }
   };
 
@@ -232,6 +242,7 @@ const FormularyLocation = () => {
               Enviar
             </button>
           </form>
+          {error && <ErrorModal message={error} messageError={error2 as string} onClose={() => setError(null)} />}
         </div>
       </div>
     </div>
