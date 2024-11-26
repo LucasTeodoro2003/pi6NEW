@@ -223,7 +223,6 @@ const FormularyLocation = () => {
                 name="aditionalInfo"
                 value={formData.aditionalInfo}
                 onChange={handleChange}
-                required
               />
             </div>
             <button
