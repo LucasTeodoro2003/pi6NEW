@@ -21,7 +21,6 @@ const BackgroundFormulary: React.FC<InicarCamera> = ({user}) => {
 const handleButtonClick = () => {
   if (location.pathname === "/login") {
     localStorage.removeItem("token");
-    console.log("Usuário Deslogado.");
   }
   if (buttonOn === "") {
     navigate(-1);

@@ -42,7 +42,6 @@ const Sidebar: React.FC<HomePagePromps> = () => {
 
   const firstName = user.name ? user.name.split(' ')[0] : '';
   const userId = user.id
-  console.log(userId)
 
   useEffect(() => {
     const fetchimg = async () => {
@@ -51,11 +50,9 @@ const Sidebar: React.FC<HomePagePromps> = () => {
 
         if (response.data && Array.isArray(response.data.return)) {
           const recognitionData = response.data.return;
-          console.log(recognitionData)
           const userImage = recognitionData.find((item: any) => item.id === userId);
           if (userImage && userImage.blobUrl.length > 0) {
             setimageUser(userImage.blobUrl[0]);
-            console.log("funcionou :)")
           } else {
             setimageUser("");
           }

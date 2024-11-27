@@ -30,7 +30,6 @@ function NewHomePage() {
     }
   }, [id, isLoggedIn]);
 
-  console.log(user?.permissions[0].role)
 
   if (!isLoggedIn) {
     return <NotFoundPage />;

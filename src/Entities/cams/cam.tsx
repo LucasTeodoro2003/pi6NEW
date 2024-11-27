@@ -16,7 +16,6 @@ const CamRow: React.FC<CamRowProps> = ({ cam }) => {
         "/CameraController/DeleteCamera?cameraId=" + id
       );
       console.log(response.data.return);
-      console.log("Deletando: ", id);
     } catch (error) {
       console.error("Error ao deletar Localização:", error);
     }
@@ -58,6 +57,7 @@ const CamRow: React.FC<CamRowProps> = ({ cam }) => {
           <button
             onClick={() => {
               console.log("Feed URL ativado para", cam.name);
+              navigate("/cam")
             }}
             className="hover:text-green-500 inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800"
           >
@@ -67,6 +67,7 @@ const CamRow: React.FC<CamRowProps> = ({ cam }) => {
           <button
             onClick={() => {
               console.log("Feed URL não disponível para", cam.name);
+              navigate("/cam")
             }}
             className="hover:text-red-400 inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800"
           >

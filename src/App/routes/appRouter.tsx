@@ -59,7 +59,6 @@ function AppRouter() {
   }, [id]);
 
   const fetchNotifications = useCallback(async () => {
-    console.log("Usuario: ", personId);
     if (!personId) return;
 
     try {

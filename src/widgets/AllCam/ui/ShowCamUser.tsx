@@ -94,9 +94,9 @@ const ShowcamUser: React.FC<ShowcamCaseProps> = () => {
               <h3 className="text-lg font-bold text-center">{camera.name}</h3>
             </div>
             <div className="relative bg-black">
-              {camera.description ? (
+              {camera.feedUrl ? (
                 <ReactPlayer
-                  url={camera.description}
+                  url={camera.feedUrl}
                   playing
                   controls
                   width="100%"

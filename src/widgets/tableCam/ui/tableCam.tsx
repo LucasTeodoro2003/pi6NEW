@@ -12,7 +12,6 @@ const TableCam: React.FC<TableCamProps> = () => {
   const location = useLocation();
 
   const locationId = location.state?.locationId || localStorage.getItem("locationId");
-  console.log("ID: " + locationId)
   const listCam = JSON.parse(localStorage.getItem("listCameras") || "[]");
 
   useEffect(() => {

@@ -98,7 +98,6 @@ const TableLocation: React.FC<TableLocationProps> = ({
 
   const handleClick = (id: string) => {
     localStorage.setItem("id", id);
-    console.log("BotaoCLicado: ", localStorage.getItem("id"));
   };
 
   // newAddress.map((addr) => {

@@ -12,8 +12,6 @@ const ConfigAccount: React.FC<ConfigAccountProps> = ({ showView, setShowView }) 
   const location = useLocation();
   const locationId = (location.state as { locationId?: string })?.locationId;
 
-  console.log(showView)
-
   return (
     <div className="flex justify-start ml-6 items-start mt-6 h-auto">
       <div className="divide-y divide-gray-200 rounded-lg bg-gray-100 dark:bg-gray-600 shadow justify-start">

@@ -37,7 +37,6 @@ function Login() {
           `/PersonController/GetPerson?email=${email}`
         );
         const changedPassword = personResponse.data.return.changedPassword;
-        console.log(changedPassword);
 
         if (changedPassword === true) {
           navigate("/home");
