@@ -28,6 +28,7 @@ const TablesAlert: React.FC = () => {
   const [showPersonId, setShowPersonId] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isImageExpanded, setIsImageExpanded] = useState(false);
 
   const getNotifications = async () => {
     try {
@@ -80,6 +81,10 @@ const TablesAlert: React.FC = () => {
 
   const detailsPerson = (id: string) => {
     setShowPersonId(showPersonId === id ? null : id);
+  };
+
+  const toggleImageSize = () => {
+    setIsImageExpanded(!isImageExpanded);
   };
 
   if (isLoading) {
@@ -142,26 +147,49 @@ const TablesAlert: React.FC = () => {
           </div>
 
           {showPersonId === notification.id && (
-            <div className="px-4 py-2">
-              {notification.detectedPeople.length > 0 ? (
-                <div>
-                  <h4 className="text-sm dark:text-white">
-                    Pessoas detectadas:
-                  </h4>
-                  <ul className="list-disc pl-5 text-sm dark:text-white">
-                    {notification.detectedPeople.map((person, index) => (
-                      <li key={index}>{person}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : (
+            <div className="px-4 py-2 flex justify-between">
+              <div className="flex-1">
+                {notification.detectedPeople.length > 0 ? (
+                  <div>
+                    <h4 className="text-sm dark:text-white">
+                      Pessoas detectadas:
+                    </h4>
+                    <ul className="list-disc pl-5 text-sm dark:text-white">
+                      {notification.detectedPeople.map((person, index) => (
+                        <li key={index}>{person}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="text-sm dark:text-white">
+                    Nenhuma pessoa detectada
+                  </p>
+                )}
                 <p className="text-sm dark:text-white">
-                  Nenhuma pessoa detectada
+                  Número de pessoas detectadas: {notification.numberOfPersons}
                 </p>
-              )}
-              <p className="text-sm dark:text-white">
-                Número de pessoas detectadas: {notification.numberOfPersons}
-              </p>
+              </div>
+              <div className="ml-4">
+                <button onClick={toggleImageSize}>
+                <img
+                  src={notification.imageUrl}
+                  alt="Imagem detectada"
+                  className="w-20 h-12 border-2 "
+                />
+                </button>
+              </div>
+              {isImageExpanded && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            onClick={toggleImageSize}
+          >
+            <img 
+              src={notification.imageUrl} 
+              alt="Imagem expandida" 
+              className="max-w-3xl max-h-96 object-contain"
+            />
+          </div>
+        )}
             </div>
           )}
 
