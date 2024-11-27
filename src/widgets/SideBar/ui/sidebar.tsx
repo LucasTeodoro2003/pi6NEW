@@ -94,11 +94,7 @@ const Sidebar: React.FC<HomePagePromps> = () => {
               </Link>
             ))}
           </nav>
-          <div className='mt-16'>
-            <img src="epiVisionCam.png" alt="" className='opacity-40 dark:opacity-100' />
-            <img src="epiVisionLetra.png" alt="" className='dark:filter dark:invert h-20 w-40 -mt-16 ml-11'/>
-          </div>
-          <div className='flex justify-between items-center mt-12 ml-2 mr-2 rounded-md'>
+          <div className='flex justify-between items-center mt-96 ml-2 mr-2 rounded-md'>
             {user ? (
               <>
                 <button className="flex items-center justify-between hover:underline hover:text-gray-500" onClick={() => navegationPages("/Config")}>
