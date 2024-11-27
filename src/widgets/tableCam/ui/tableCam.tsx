@@ -100,7 +100,7 @@ const TableCam: React.FC<TableCamProps> = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan={3}
+                      colSpan={4}
                       className="text-center py-5 text-gray-500 dark:text-gray-400"
                     >
                       Nenhuma câmera encontrada.

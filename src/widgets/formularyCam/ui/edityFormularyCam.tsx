@@ -87,13 +87,6 @@ const EdityFormularyCam = () => {
                   className="text-gray-700 dark:text-white"
                 />
                 <InputField
-                  label="URL do Feed"
-                  name="feedUrl"
-                  value={cameraData.feedUrl ?? ""}
-                  onChange={handleChange}
-                  className="text-gray-700 dark:text-white"
-                />
-                <InputField
                   label="Modelo"
                   name="model"
                   value={cameraData.model}

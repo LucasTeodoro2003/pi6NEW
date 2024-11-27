@@ -46,12 +46,12 @@ const handleButtonClick = () => {
 
       setTimeout(() => {
         setFadeOut(true);
-      }, 3000);
+      }, 1000);
 
       setTimeout(() => {
         setMensage(false);
         setFadeOut(false);
-      }, 4000);
+      }, 1000);
     }
   }, []);
 
@@ -64,13 +64,13 @@ const handleButtonClick = () => {
 
       setTimeout(() => {
         setFadeOut(true);
-      }, 3000);
+      }, 1000);
 
       setTimeout(() => {
         setMensageCam(false);
         setFadeOut(false);
         window.location.href = "/home";
-      }, 4000);
+      }, 1000);
     }
   }, []);
 
@@ -83,13 +83,13 @@ const handleButtonClick = () => {
 
       setTimeout(() => {
         setFadeOut(true);
-      }, 3000);
+      }, 1000);
 
       setTimeout(() => {
         setMensageEdityCam(false);
         setFadeOut(false);
         window.location.href = "/home";
-      }, 4000);
+      }, 1000);
     }
   }, []);
 
@@ -100,7 +100,7 @@ const handleButtonClick = () => {
         <ConfigAccount showView={showView} setShowView={setShowView}/>
         {mensage && (
           <div
-            className={`transition-opacity duration-1000 ${
+            className={`transition-opacity duration-500 ${
               fadeOut ? "opacity-0" : "opacity-100"
             }`}
           >
@@ -109,7 +109,7 @@ const handleButtonClick = () => {
         )}
         {mensageCam && (
           <div
-            className={`transition-opacity duration-1000 ${
+            className={`transition-opacity duration-500 ${
               fadeOut ? "opacity-0" : "opacity-100"
             }`}
           >
@@ -118,7 +118,7 @@ const handleButtonClick = () => {
         )}
         {mensageEdityCam && (
           <div
-            className={`transition-opacity duration-1000 ${
+            className={`transition-opacity duration-500 ${
               fadeOut ? "opacity-0" : "opacity-100"
             }`}
           >

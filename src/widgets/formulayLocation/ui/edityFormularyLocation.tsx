@@ -266,7 +266,6 @@ const InputField: React.FC<InputFieldProps> = ({
       value={value}
       onChange={onChange}
       className={`w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 ${className}`}
-      required
     />
   </div>
 );
