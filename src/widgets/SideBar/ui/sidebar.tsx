@@ -6,8 +6,9 @@ import {
   IdentificationIcon,
   VideoCameraIcon,
 } from '@heroicons/react/24/outline';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { api } from '../../../App/serviceApi';
 
 interface NavigationItem {
   name: string;
@@ -37,8 +38,36 @@ const Sidebar: React.FC<HomePagePromps> = () => {
   const location = useLocation();
   const navegationPages = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "{}")
+  const [imageuser, setimageUser] = useState<string>("")
 
   const firstName = user.name ? user.name.split(' ')[0] : '';
+  const userId = user.id
+  console.log(userId)
+
+  useEffect(() => {
+    const fetchimg = async () => {
+      try {
+        const response = await api.get("/RecognitionController/GetAllRecognitions");
+
+        if (response.data && Array.isArray(response.data.return)) {
+          const recognitionData = response.data.return;
+          console.log(recognitionData)
+          const userImage = recognitionData.find((item: any) => item.id === userId);
+          if (userImage && userImage.blobUrl.length > 0) {
+            setimageUser(userImage.blobUrl[0]);
+            console.log("funcionou :)")
+          } else {
+            setimageUser("");
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao buscar imagens para usuario:", error);
+        setimageUser("");
+      }
+    };
+
+    fetchimg();
+  }, [userId]);
 
 
   
@@ -98,7 +127,7 @@ const Sidebar: React.FC<HomePagePromps> = () => {
             {user ? (
               <>
                 <button className="flex items-center justify-between hover:underline hover:text-gray-500" onClick={() => navegationPages("/Config")}>
-                  <img className={`h-8 w-8 rounded-full ${user.image ? "" : "dark:filter dark:invert"}`} src={user.image ? user.image : "usuario.png"} alt={`Foto do ${user.name}`}/>
+                  <img className={`h-8 w-8 rounded-full ${imageuser ? "" : "dark:filter dark:invert"}`} src={imageuser ? imageuser : "usuario.png"} alt={`Foto do ${user.name}`}/>
                   <div className="ml-2 flex flex-grow items-center font-Jakarta font-medium text-xl dark:text-white dark:hover:text-gray-400">
                     {firstName}
                   </div>

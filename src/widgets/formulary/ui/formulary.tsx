@@ -19,6 +19,8 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
   const [cargo, setCargo] = useState<number>(1);
   const [mensage, setMensage] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState(false);
 
   const verifyButton = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -31,6 +33,18 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
         email,
         permissions: [{ role: cargo, locationId: localizacao }],
       });
+
+      const formData = new FormData();
+      selectedFiles.forEach((file: any) => formData.append("files", file));
+
+      await api.post(
+        `/RecognitionController/UpsertRecognition?personId=${email}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
       localStorage.setItem("showSuccessMessage", "true");
       window.location.reload();
     } catch (err) {
@@ -143,15 +157,26 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                               htmlFor="file-upload"
                               className="relative cursor-pointer rounded-md bg-white dark:bg-gray-700 font-medium text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                             >
-                              <span>Selecione uma foto</span>
                               <input
-                                id="file-upload"
-                                name="file-upload"
                                 type="file"
-                                className="sr-only"
+                                accept="image/*"
+                                multiple
+                                onChange={(e) => {
+                                  if (e.target.files) {
+                                    setSelectedFiles(
+                                      Array.from(e.target.files)
+                                    );
+                                    setFileError(false);
+                                  }
+                                }}
+                                className="block w-full text-sm text-gray-600 dark:text-white border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                               />
+                              {fileError && (
+                                <p className="mt-2 text-sm text-red-600">
+                                  Por favor, selecione pelo menos uma foto.
+                                </p>
+                              )}
                             </label>
-                            <p className="pl-1">ou arraste e solte aqui</p>
                           </div>
                           <p className="text-xs text-gray-500 dark:text-white">
                             PNG, JPG, GIF até 10MB
@@ -159,20 +184,6 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <label
-                    htmlFor="obs"
-                    className="mt-4 block text-sm font-medium text-gray-700 dark:text-white"
-                  >
-                    Observações
-                  </label>
-                  <div className="mt-1">
-                    <textarea
-                      id="obs"
-                      name="obs"
-                      rows={3}
-                      className="bg-gray-100 dark:text-white dark:bg-gray-700 mt-1 block w-full rounded-md border-gray-300 border-2 dark:border-gray-400 shadow-sm dark:shadow-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
                   </div>
                 </div>
               </div>
@@ -259,7 +270,9 @@ const Formulary: React.FC<FormularyProps> = ({ user }) => {
                         required
                       >
                         <option value="">Selecione uma Localização</option>
-                        <option value="">Todas as Localizações (Apenas para Administrador)</option>
+                        <option value="">
+                          Todas as Localizações (Apenas para Administrador)
+                        </option>
                         {user && user.email.length > 0 ? (
                           locations.map((location: any) => (
                             <option key={location.id} value={location.id}>
